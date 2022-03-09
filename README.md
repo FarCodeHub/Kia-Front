@@ -1,6 +1,6 @@
 # Angular Project [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=FarCodeHub_Kia-Front&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=FarCodeHub_Kia-Front) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=FarCodeHub_Kia-Front&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=FarCodeHub_Kia-Front) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=FarCodeHub_Kia-Front&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=FarCodeHub_Kia-Front)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli)
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) and Rxjs
 
 # What is this project about?
 
