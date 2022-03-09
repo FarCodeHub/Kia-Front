@@ -1,0 +1,53 @@
+
+
+
+<cmpt-add-edit-side-bar [pageMode]="pageMode" [isHeader]="false" [form]="baseValueTypeForm" pageName="مقادیر پایه" (onClose)="cancel()" (onSave)="save()">
+
+
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">افزودن نوع جدید</div>
+        <button
+            mat-icon-button
+            *hasPermission="['basevaluetype-add']"
+            (click)="saveAndClose()"
+            [tabIndex]="-1">
+            <mat-icon
+                class="text-current"
+                [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+
+
+    <form class="flex flex-col mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden" [formGroup]="baseValueTypeForm">
+    <div class="mt-4">
+        <div class="flex">
+            <mat-form-field class="flex-auto">
+                <input
+                    matInput
+                    [placeholder]="'عنوان نوع'"
+                    formControlName="title"
+                />
+            </mat-form-field>
+        </div>
+
+        <div class="flex">
+            <mat-form-field class="flex-auto">
+                <input
+                    matInput
+                    [placeholder]="'نام یکتا'"
+                    formControlName="uniqueName"
+                />
+            </mat-form-field>
+        </div>
+
+
+
+    </div>
+</form>
+
+</div>
+
+</cmpt-add-edit-side-bar>
+

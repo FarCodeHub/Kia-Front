@@ -1,0 +1,167 @@
+<div class="w-full inset-0 flex flex-col min-w-0 overflow-hidden">
+
+    <mat-drawer-container class="flex-auto h-full dark:bg-transparent" (backdropClick)="onBackdropClicked()">
+
+        <!-- Drawer -->
+        <mat-drawer class="w-full  shadow-md dark:bg-gray-900" [mode]="drawerMode" [opened]="addVisible"
+            [position]="'end'" [disableClose]="true" #matDrawer>
+            <app-add-customer [updateItem]="updateItem" (onClose)="closeAdd($event)"></app-add-customer>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col border-l">
+
+            <!-- Main -->
+            <div class="flex flex-col flex-auto">
+
+                <!-- ------------ Header ------------------ -->
+                <cmpt-page-add-header title="مشتریان" actionPermissionName="customer-add" (onShowAdd)="showAdd()">
+                </cmpt-page-add-header>
+
+                <!-- ------------ Main Content ------------------ -->
+                <div class="p-6 sm:p-10 ">
+
+                    <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden  sm:overflow-y-auto">
+                        <c-data-table-filters-header [filters]="filters" (filtersChanged)="applyFilter($event)">
+                        </c-data-table-filters-header>
+                        <ng-container>
+                            <div class="data-grid overflow-x-auto">
+
+                                <div class="data-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                    matSort matSortDisableClear>
+                                    <c-data-table-column title="نام" field="fullName" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+
+                                    <c-data-table-column title="کد ملی" field="identityCode" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+
+                                    <c-data-table-column title=" تاریخ تولد" field="birthDate" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+
+                                    <c-data-table-column title="آدرس" field="address" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+                                    <c-data-table-column title=" کد پستی" field="postalCode" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+
+                                    <c-data-table-column title="تلفن" field="phone" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+
+                                </div>
+
+                                <ng-container *ngFor="let item of items;">
+                                    <div class="data-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b bg-white">
+
+                                        <div class="hidden md:block">
+                                            {{item.personModel.fullName}}
+                                        </div>
+
+
+                                        <div class="hidden md:block">
+                                            {{item.personModel.identityCode}}
+                                        </div>
+
+                                        <div class="hidden sm:block">
+                                            {{item.personModel.birthDate |jalalidate}}
+                                        </div>
+
+                                        <div class="hidden sm:block">
+                                            {{item.personModel.address}}
+                                        </div>
+
+                                        <div class="hidden sm:block">
+                                            {{item.personModel.postalCode}}
+                                        </div>
+
+
+                                        <div class=" flex flex-wrap items-center ">
+                                            <ng-container *ngIf="item.personModel.phone1">
+                                                <div
+                                                    class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                                                    <mat-icon class="icon-size-5 text-current ml-2 mr-1"
+                                                        [svgIcon]="'heroicons_solid:phone'">
+                                                    </mat-icon>
+                                                    <span class="text-md font-medium whitespace-nowrap">
+                                                        {{item.personModel.phone1}}
+                                                    </span>
+
+                                                </div>
+                                            </ng-container>
+                                            <ng-container *ngIf="item.personModel.phone2">
+                                                <div
+                                                    class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                                                    <mat-icon class="icon-size-5 text-current ml-2 mr-1"
+                                                        [svgIcon]="'heroicons_solid:phone'"></mat-icon>
+
+                                                    <span class="text-md font-medium whitespace-nowrap">
+                                                        {{item.personModel.phone2}}
+                                                    </span>
+
+                                                </div>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="item.personModel.phone3">
+                                                <div
+                                                    class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                                                    <mat-icon class="icon-size-5 text-current ml-2 mr-1"
+                                                        [svgIcon]="'heroicons_solid:phone'">
+                                                    </mat-icon>
+                                                    <span
+                                                        class="text-md font-medium whitespace-nowrap">{{item.personModel.phone3}}</span>
+
+                                                </div>
+                                            </ng-container>
+                                        </div>
+
+                                        <div class="grid-title">
+                                            <button class="mx-2" mat-icon-button *hasPermission="['customer-edit']"
+                                                (click)="editItem(item)">
+                                                <mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
+
+                                            </button>
+                                            <button class=" text-red-500" *hasPermission="['customer-delete']"
+                                                mat-icon-button (click)="deleteItem(item)">
+                                                <mat-icon svgIcon="heroicons_outline:trash" class="text-red-500">
+                                                </mat-icon>
+
+                                            </button>
+                                        </div>
+
+
+                                        <div class="grid-title">
+
+                                        </div>
+                                    </div>
+
+                                </ng-container>
+
+                            </div>
+
+                            <mat-paginator
+                                class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+                                [length]="pagination.length" [(pageIndex)]="pagination.pageIndex"
+                                [pageSize]="pagination.size" [pageSizeOptions]="[5, 10, 25, 100]"
+                                [showFirstLastButtons]="true"></mat-paginator>
+
+                        </ng-container>
+
+                        <ng-container *ngIf="pagination.length==0;">
+                            <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
+                                هیچ مشتری تعریف نشده است
+                            </div>
+                        </ng-container>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>

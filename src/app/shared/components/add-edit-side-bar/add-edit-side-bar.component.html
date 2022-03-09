@@ -1,0 +1,61 @@
+<div class="flex flex-auto">
+    <!-- ------------Copy two first tags----------------- -->
+
+    <form class="flex flex-col flex-auto overflow-y-auto" [formGroup]="form">
+        <!-- Header -->
+        <ng-container *ngIf="isHeader">
+            <div class="flex items-center text-white p-6 justify-between border-b bg-primary ">
+                <!-- Title/Icon-->
+                <ng-container *ngIf="pageMode==PageMode.Add">
+                    <div class="flex items-center justify-center ">
+                        <mat-icon [svgIcon]="'heroicons_outline:plus-circle'" class="text-current"></mat-icon>
+                        <span class="mr-2 text-2xl font-bold">ایجاد {{pageName}} جدید</span>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="pageMode==PageMode.Update">
+                    <div class="flex items-center justify-center">
+                        <mat-icon [svgIcon]="'heroicons_outline:pencil'" class="text-current"></mat-icon>
+                        <span class="mr-2 text-2xl font-bold">ویرایش {{pageName}} </span>
+                    </div>
+                </ng-container>
+
+
+                <div class="flex items-center">
+                    <!-- Close button -->
+                    <button mat-icon-button (click)="close()">
+                        <mat-icon [svgIcon]="'heroicons_outline:x'" class="text-current"></mat-icon>
+                    </button>
+                </div>
+
+            </div>
+        </ng-container>
+
+        <!-- Content -->
+        <div class="p-6">
+            <ng-content></ng-content>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="flex border-t mt-8 px-8 py-5 bg-gray-50dark:bg-gray-700">
+
+            <button class="px-6 ml-3" mat-flat-button [color]="'primary'" (click)="save()" [disabled]="saving">
+                <mat-spinner diameter="20" *ngIf="saving"></mat-spinner>
+                <mat-icon *ngIf="pageMode==PageMode.Update && !saving" class="ml-2"
+                    [svgIcon]="'heroicons_outline:pencil'">
+                </mat-icon>
+                <span *ngIf="pageMode==PageMode.Update">ویرایش</span>
+
+                <mat-icon *ngIf="pageMode==PageMode.Add && !saving" class="ml-2" [svgIcon]="'heroicons_outline:plus'">
+                </mat-icon>
+                <span *ngIf="pageMode==PageMode.Add">ثبت</span>
+            </button>
+
+
+            <button class="px-6 ml-3" type="button" mat-stroked-button (click)="close()">
+                انصراف
+            </button>
+        </div>
+    </form>
+</div>

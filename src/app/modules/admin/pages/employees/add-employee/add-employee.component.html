@@ -1,0 +1,187 @@
+<cmpt-add-edit-side-bar [pageMode]="pageMode" [form]="form" pageName="کارمند" (onClose)="cancel()" (onSave)="save()">
+
+    <form [formGroup]="form" class="grid grid-cols-3  gap-2">
+        <div class="flex flex-auto items-end -mt-16">
+            <div
+                class="relative flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
+                <!-- Upload / Remove avatar -->
+                <div class="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+                <div class="absolute inset-0 flex items-center justify-center z-20">
+                    <div>
+                        <!-- <input #fileUpload type="file" name="fileUpload" accept="image/*" id="fileUpload" style="display: none" /> -->
+                        <input id="avatar-file-input" name="avatarFileInput"
+                            class="absolute h-0 w-0 opacity-0 invisible pointer-events-none" type="file"
+                            [multiple]="false" [accept]="'image/jpeg, image/png'"
+                            (change)="uploadAvatar(avatarFileInput.files[0])" #avatarFileInput>
+                        <label
+                            class="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer hover:bg-hover"
+                            for="avatar-file-input" matRipple>
+                            <mat-icon class="text-white" [svgIcon]="'heroicons_outline:camera'"></mat-icon>
+                        </label>
+                    </div>
+                    <div>
+                        <button mat-icon-button (click)="removeAvatar()">
+                            <mat-icon class="text-white" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <!-- Image/Letter -->
+                <img class="object-cover w-full h-full" *ngIf="uploadedFile.filePath!=''"
+                    [src]="uploadedFile.fullFilePath">
+                <img class="object-cover w-full h-full" *ngIf="uploadedFile.filePath==''"
+                    [src]="'assets/images/avatars/no-avatar.jpg'">
+            </div>
+        </div>
+
+        <mat-form-field>
+            <mat-label>نام</mat-label>
+            <input matInput [placeholder]="' نام را وارد کنید'" formControlName="firstName" required />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>نام خانوادگی</mat-label>
+            <input matInput [placeholder]="' نام خانوادگی را وارد کنید'" formControlName="lastName" required />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>نام پدر</mat-label>
+            <input matInput [placeholder]="' نام پدر را وارد کنید'" formControlName="fatherName" required />
+        </mat-form-field>
+
+
+        <mat-form-field>
+            <mat-label>کد ملی</mat-label>
+            <input matInput [placeholder]="' کد ملی را وارد کنید'" formControlName="nationalCode" required
+                maxlength="10" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>شماره شناسنامه</mat-label>
+            <input matInput [placeholder]="' شماره شناسنامه را وارد کنید'" formControlName="identityCode" required
+                maxlength="10" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>جنسیت </mat-label>
+            <mat-select [placeholder]="'یک مورد را انتخاب کنید'" formControlName="genderBaseId">
+                <mat-option *ngFor="let item of genders" [value]="item.id">{{ item.title }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>تاریخ تولد</mat-label>
+            <input matInput placeholder="تاریخ تولد را وارد نمایید" [matDatepicker]="picker" formControlName="birthDate"
+                readonly required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>شهر محل تولد</mat-label>
+            <mat-select formControlName="birthPlaceId">
+                <div class="p-2">
+                    <input (keyup)="searchBirthPlace($event.target.value)" class="border rounded w-full p-2"
+                        placeholder="جستجو شهر و استان" />
+                </div>
+
+                <mat-optgroup *ngFor="let p of birthPlaceProvinces" [label]="p.title">
+                    <mat-option *ngFor="let c of p.cities" [value]="c.id">
+                        &nbsp;&nbsp; {{ c.title }}
+                    </mat-option>
+                </mat-optgroup>
+            </mat-select>
+        </mat-form-field>
+
+        <!-- <div class="col-span-3">
+            <p class="text-lg font-medium">اطلاعات تماس</p>
+            <p class="text-secondary mb-6">
+                لطفا اطلاعات تماس را تکمیل نمایید
+            </p>
+        </div> -->
+        <mat-form-field appearance="fill">
+            <mat-label>استان/شهر</mat-label>
+
+            <!-- <input matInput formControlName="zipCodeId" readonly /> -->
+            <mat-select formControlName="zipCodeId">
+                <div class="p-2">
+                    <input (keyup)="searchCountryDivision($event.target.value)" class="border rounded w-full p-2"
+                        placeholder="جستجو شهر و استان" />
+                </div>
+
+                <mat-optgroup *ngFor="let p of provinces" [label]="p.title">
+                    <mat-option *ngFor="let c of p.cities" [value]="c.id">
+                        &nbsp;&nbsp; {{ c.title }}
+                    </mat-option>
+                </mat-optgroup>
+            </mat-select>
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label> آدرس </mat-label>
+            <input matInput [placeholder]="' آدرس را وارد کنید'" formControlName="address" required />
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label> کد پستی </mat-label>
+            <input matInput [placeholder]="'  کد پستی را وارد کنید'" formControlName="postalCode" maxlength="10" />
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label> ایمیل </mat-label>
+            <input matInput [placeholder]="'  ایمیل را وارد کنید'" formControlName="email" type="email" />
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>شماره تماس 1 </mat-label>
+            <input matInput [placeholder]="'شماره تماس را وارد کنید'" formControlName="phone1" required type="tel" />
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:phone'" maxlength="12"></mat-icon>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>شماره تماس 2 </mat-label>
+            <input matInput [placeholder]="'شماره تماس را وارد کنید'" formControlName="phone2" type="tel" />
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:phone'" maxlength="12"></mat-icon>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>شماره تماس 3 </mat-label>
+            <input matInput [placeholder]="'شماره تماس را وارد کنید'" formControlName="phone3" type="tel" />
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:phone'" maxlength="12"></mat-icon>
+        </mat-form-field>
+
+        <!-- --------------- Operators Section---------------- -->
+        <div class="col-span-3">
+            <p class="text-lg font-medium">اطلاعات کارمندی </p>
+            <p class="text-secondary mb-6">
+                سمت و واحد را نتخاب نمایید
+            </p>
+        </div>
+        <mat-form-field>
+            <mat-label>واحد </mat-label>
+            <mat-select [placeholder]="'یک مورد را انتخاب کنید'" formControlName="unitId" [disabled]="_unitId">
+                <mat-option *ngFor="let item of units" [value]="item.id">{{ item.title }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>سمت </mat-label>
+            <mat-select [placeholder]="'یک مورد را انتخاب کنید'" formControlName="unitPositionId">
+                <mat-option *ngFor="let item of unitPositions" [value]="item.id">{{ item.positionTitle }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div class="flex items-center">
+            <mat-checkbox formControlName="isOperator">اپراتور</mat-checkbox>
+            <mat-form-field *ngIf="form.get('isOperator').value">
+                <mat-label>شماره خط </mat-label>
+                <input matInput [placeholder]="'شماره خط را وارد کنید'" formControlName="extentionNumber"/>
+                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:tel'" maxlength="12"></mat-icon>
+            </mat-form-field>
+
+        </div>
+    </form>
+
+</cmpt-add-edit-side-bar>

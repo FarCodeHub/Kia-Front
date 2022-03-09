@@ -1,0 +1,29 @@
+<cmpt-add-edit-side-bar [pageMode]="pageMode" [form]="form" pageName="دسترسی" (onClose)="cancel()" (onSave)="save()">
+    <form [formGroup]="form" class="grid grid-cols-1 gap-2">
+
+        <mat-form-field>
+            <mat-label>
+                عنوان را وارد کنید
+            </mat-label>
+            <input matInput [placeholder]="'عنوان را وارد کنید'" formControlName="title" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>
+                نام یکتا را وارد کنید
+            </mat-label>
+            <input matInput [placeholder]="' نام یکتا را وارد کنید'" formControlName="uniqueName"/>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>
+                دسترسی اصلی انتخاب کنید
+            </mat-label>
+            <mat-select [placeholder]="'دسترسی اصلی انتخاب کنید'" formControlName="parentId">
+                <mat-option *ngFor="let item of (permissions$ | async)" [value]="item.id">{{ item.title }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</cmpt-add-edit-side-bar>
+

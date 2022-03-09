@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\modules",
+    "\\src\\app\\modules\\admin",
+    "\\src\\app\\modules\\admin\\pages",
+    "\\src\\app\\modules\\admin\\pages\\questions",
+    "\\src\\app\\modules\\admin\\pages\\questions\\add-question",
+    "\\src\\app\\modules\\admin\\pages\\roles\\add-role"
+  ],
+  "SelectedNode": "\\src",
+  "PreviewInSolutionExplorer": false
+}

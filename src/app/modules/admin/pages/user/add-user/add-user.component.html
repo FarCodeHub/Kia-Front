@@ -1,0 +1,122 @@
+<cmpt-add-edit-side-bar [pageMode]="pageMode" [form]="form" pageName="کاربران" (onClose)="cancel()" (onSave)="save()">
+  <form [formGroup]="form" class="grid grid-cols-1 gap-2">
+    <mat-form-field>
+
+      <mat-label>
+        نام شخص را وارد کنید
+      </mat-label>
+      <input type="text" matInput [placeholder]="'نام شخص را وارد کنید'" formControlName="personId"
+        [matAutocomplete]="auto" />
+
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{ option.fullName }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <div class=" border rounded-md bg-gray-50" *ngIf="pageMode == 1">
+      <div class="relative flex flex-col flex-auto justify-center items-center p-4">
+
+        <div class="max-w-3xl">
+          <div class="
+          flex
+          items-center
+          justify-center
+          w-32
+          h-32
+          rounded-full
+          overflow-hidden
+          ring-4 ring-bg-card">
+            <img class="object-cover w-full h-full" *ngIf="selectedPerson.profilePhotoUrl"
+              src="{{imageUrl}}/{{selectedPerson.profilePhotoUrl}}" />
+            <div class=" flex items-center justify-center w-full  h-full roundedoverflow-hidden uppercase
+            text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200"
+              *ngIf="!selectedPerson.profilePhotoUrl">
+              {{ selectedPerson.fullName }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="px-5" *ngIf="selectedPerson">
+        <div class="flex sm:items-center mb-2">
+          <mat-icon [svgIcon]="'heroicons_outline:identification'" class="ml-4 text-blue-300"></mat-icon>
+          <div class="ml-6 leading-6">
+            کد ملی : {{ selectedPerson.nationalCode }}
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+
+        <div class="flex sm:items-center my-2">
+          <mat-icon [svgIcon]="'heroicons_outline:cake'" class="ml-4 text-blue-400"></mat-icon>
+          <div class="ml-6 leading-6">
+            تاریخ تولد : {{ selectedPerson.birthDate | jalali }}
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+
+        <div class="flex sm:items-center my-2">
+          <mat-icon [svgIcon]="'heroicons_outline:phone'" class="ml-4 text-blue-500"></mat-icon>
+          <div class="ml-6 leading-6">
+            شماره تلفن : {{ selectedPerson.phone1 }}
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+        <div class="flex sm:items-center my-2">
+          <mat-icon [svgIcon]="'heroicons_outline:user'" class="ml-4 text-blue-600"></mat-icon>
+          <div class="ml-6 leading-6">
+            نام پدر : {{ selectedPerson.fatherName }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <mat-form-field>
+      <mat-label>
+        نام کاربری را وارد کنید
+      </mat-label>
+      <input matInput [placeholder]="'نام کاربری را وارد کنید'" formControlName="username" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>
+        رمز عبور را وارد کنید
+      </mat-label>
+      <input matInput [placeholder]="'رمز عبور را وارد کنید'" formControlName="password"
+        [type]="hide ? 'password' : 'text'" />
+      <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide">
+        <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <div>
+      <!-- <mat-selection-list class="max-h-60 overflow-y-auto" formControlName="rolesIdList">
+                <mat-list-option *ngFor="let item of roles$ | async" [value]="item.id">
+                    {{ item.title }}
+                    <mat-divider></mat-divider>
+                </mat-list-option>
+            </mat-selection-list> -->
+
+      <mat-form-field>
+        <mat-label class="font-bold">انتخاب نقش</mat-label>
+        <mat-select formControlName="rolesIdList" multiple>
+          <mat-option *ngFor="let item of roles$ | async" [value]="item.id">{{
+            item.title
+            }}</mat-option>
+        </mat-select>
+
+        <mat-error *ngIf="form.get('rolesIdList')?.errors?.required">
+          یک نقش را نتخاب نمایید
+        </mat-error>
+      </mat-form-field>
+
+      <mat-spinner diameter="40" *ngIf="loaderService.isLoading | async"></mat-spinner>
+    </div>
+  </form>
+</cmpt-add-edit-side-bar>

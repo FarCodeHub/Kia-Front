@@ -1,0 +1,26 @@
+<ng-container *ngIf="field">
+    <div [mat-sort-header]="field" class="border-l-2 border-gray-300">
+        <button mat-icon-button class="ml-2" mat-filter-item [matMenuTriggerFor]="filterMenu.menu">
+            <mat-icon svgIcon="heroicons_outline:filter" *ngIf="filters[field]==undefined"
+                class="text-gray-400 icon-size-5">
+            </mat-icon>
+            <mat-icon svgIcon="heroicons_solid:filter" *ngIf="filters[field]!=undefined"
+                class="text-amber-500 icon-size-5">
+            </mat-icon>
+        </button>
+        {{title}}
+
+        <c-filter-menu #filterMenu [title]="title" [field]="field" [(filters)]="filters"
+            (filtersChanged)="onFiltersChanged(filters)"></c-filter-menu>
+    </div>
+</ng-container>
+<ng-container *ngIf="field==null">
+    <div class="border-l-2 border-gray-300 flex items-center">
+        <button mat-icon-button class="ml-2" mat-filter-item>
+            <mat-icon style="visibility: hidden;" svgIcon="heroicons_outline:filter" class="text-gray-400 icon-size-5">
+            </mat-icon>
+        </button>
+        {{title}}
+    </div>
+
+</ng-container>

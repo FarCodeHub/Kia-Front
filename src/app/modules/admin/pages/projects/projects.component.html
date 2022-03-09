@@ -1,0 +1,153 @@
+<div class="w-full inset-0 flex flex-col min-w-0 overflow-hidden">
+    <mat-drawer-container class="flex-auto h-full dark:bg-transparent" (backdropClick)="onBackdropClicked()">
+
+        <mat-drawer class="w-full shadow-md dark:bg-gray-900" [mode]="drawerMode"
+            [opened]="addVisible" [position]="'end'" [disableClose]="true" #matDrawer>
+            <app-add-project [updateItem]="updateItem" (onClose)="closeAdd($event)"></app-add-project>
+        </mat-drawer>
+
+
+
+        <mat-drawer-content class="flex flex-col border-l">
+
+            <div class="flex flex-col flex-auto">
+
+                <cmpt-page-add-header title="پروژه ها" [actionPermissionName]="'project-add'" (onShowAdd)="showAdd()">
+                </cmpt-page-add-header>
+
+                <div class="p-6 sm:p-10 ">
+
+                    <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden  sm:overflow-y-auto">
+                        <c-data-table-filters-header [filters]="filters" (filtersChanged)="applyFilter($event)">
+                        </c-data-table-filters-header>
+                        <ng-container>
+                            <div class="data-grid overflow-x-auto">
+
+                                <div class="data-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                    matSort matSortDisableClear>
+
+                                    <c-data-table-column title="عنوان" field="title" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+                                    <c-data-table-column title="اولویت" field="priority" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+                                    <c-data-table-column title="تعداد قرارداد" field="contractsCounter"
+                                        [(filters)]="filters" (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+                                    <c-data-table-column title="آدرس" field="address" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+                                    <c-data-table-column title="آیتم ها" field="projectSubItems" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+                                    <c-data-table-column title="فایل" field="file" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+
+
+                                    <div class="hidden md:block">
+
+                                    </div>
+
+                                </div>
+
+                                <ng-container *ngFor="let item of items;">
+                                    <div class="data-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b bg-white">
+
+                                        <div class="hidden md:block">
+                                            {{item.title}}
+
+                                        </div>
+
+                                        <div class="hidden md:block">
+                                            {{item.priorityBaseTitle}}
+                                        </div>
+
+                                        <div class="hidden md:block">
+                                            {{item.contractsCounter}}
+                                        </div>
+
+                                        <div class="hidden sm:block">
+                                            {{item.address}}
+                                        </div>
+                                        <div class="hidden sm:flex  flex-wrap items-start ">
+                                            <ng-container *ngFor="let subitem of item.children; trackBy: trackByFn">
+                                                <div
+                                                    class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                                                    <span class="text-md font-medium whitespace-nowrap">
+                                                        {{subitem.title}}
+                                                    </span>
+                                                </div>
+                                            </ng-container>
+
+                                        </div>
+
+                                        <div class="hidden sm:block">
+                                            <!-- <button (click)="showImage(item.fileUrl)" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" >
+                                            نمایش
+                                          </button> -->
+                                            <div class="relative border rounded flex justify-center"
+                                                *ngIf="!isFileImage(item.filePath);else fileImage">
+
+                                                <a href="{{serverUrl}}/{{item.filePath}}" target="_blank">
+                                                    <mat-icon class="icon-size-14 text-hint"
+                                                        [svgIcon]="'iconsmind:file'">
+                                                    </mat-icon>
+                                                    <div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white "
+                                                        [class.bg-red-600]="getFileExtension(item.filePath) === 'PDF'"
+                                                        [class.bg-blue-600]="getFileExtension(item.filePath) === 'DOC'"
+                                                        [class.bg-green-600]="getFileExtension(item.filePath) === 'XLSX'"
+                                                        [class.bg-gray-600]="getFileExtension(item.filePath)=== 'TXT'">
+                                                        {{getFileExtension(item.filePath) }}
+                                                    </div>
+
+                                                </a>
+                                            </div>
+                                            <ng-template #fileImage>
+                                                <img [src]="serverUrl+'/'+item.filePath">
+                                            </ng-template>
+
+                                        </div>
+                                        <div class="grid-title">
+                                            <button class="mx-2" mat-icon-button (click)="editItem(item)">
+                                                <mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
+
+                                            </button>
+                                            <button class=" text-red-500" mat-icon-button
+                                                *hasPermission="['project-delete']" (click)="deleteItem(item)">
+                                                <mat-icon svgIcon="heroicons_outline:trash" class="text-red-500">
+                                                </mat-icon>
+
+                                            </button>
+                                        </div>
+
+                                    </div>
+
+                                </ng-container>
+
+                            </div>
+
+                            <mat-paginator
+                                class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+                                [length]="pagination.length" [(pageIndex)]="pagination.pageIndex"
+                                [pageSize]="pagination.size" [pageSizeOptions]="[5, 10, 25, 100]"
+                                [showFirstLastButtons]="true"></mat-paginator>
+
+                        </ng-container>
+
+                        <ng-container *ngIf="pagination.length==0;">
+                            <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
+                                هیچ پروژه ای تعریف نشده است
+                            </div>
+                        </ng-container>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+</div>

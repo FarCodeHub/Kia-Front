@@ -1,0 +1,155 @@
+<div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+
+    <mat-drawer-container class="flex-auto h-full" [hasBackdrop]="false">
+
+        <mat-drawer class="w-full  shadow-md dark:bg-gray-900" [mode]="drawerMode" [opened]="addVisible"
+            [position]="'end'" [disableClose]="true" #matDrawer>
+            <app-add-customer [updateItem]="customer" (onClose)="closeAdd($event)"></app-add-customer>
+        </mat-drawer>
+
+        <!-- Drawer content -->
+        <mat-drawer-content class="flex overflow-hidden">
+
+            <!-- Chats list -->
+            <ng-container>
+                <div
+                    class="relative flex flex-auto  flex-col w-full min-w-0 lg:min-w-100 lg:max-w-100 bg-card dark:bg-transparent">
+
+                    <!-- Header -->
+                    <div class="flex  items-center py-4 px-8 border-b bg-gray-50 dark:bg-transparent">
+                        <h1 class="flex-auto">اطلاعات مشتری</h1>
+                        <button class="px-6 ml-3" mat-flat-button [color]="'primary'" (click)="editCustomer()">
+                            <mat-icon class="ml-2" [svgIcon]="'heroicons_outline:pencil'">
+                            </mat-icon>
+                            ویرایش
+                        </button>
+                    </div>
+
+                    <!-- Customer Detail -->
+                    <div class="flex flex-auto flex-col overflow-y-auto p-4 px-6">
+                        <!-- phone1 -->
+
+                        <mat-form-field class="w-full">
+                            <mat-label>شماره تماس:</mat-label>
+                            <mat-icon class="icon-size-5 ml-2" matPrefix [svgIcon]="'heroicons_outline:phone-incoming'">
+                            </mat-icon>
+                            <input matInput placeholder="شماره تماس" [(ngModel)]="customer?.personModel.phone1"
+                                readonly>
+                        </mat-form-field>
+
+
+                        <!-- phone 2 -->
+                        <ng-container *ngIf="customer?.personModel.phone2">
+                            <mat-form-field class="w-full">
+                                <mat-label>شماره تماس:</mat-label>
+                                <mat-icon class="icon-size-5 ml-2" matPrefix
+                                    [svgIcon]="'heroicons_outline:phone-incoming'">
+                                </mat-icon>
+                                <input matInput placeholder="شماره تماس 2" [(ngModel)]="customer.personModel.phone2"
+                                    readonly>
+                            </mat-form-field>
+                        </ng-container>
+
+                        <!-- phone 3 -->
+                        <ng-container *ngIf="customer?.personModel.phone3">
+                            <mat-form-field class="w-full">
+                                <mat-label>شماره تماس:</mat-label>
+                                <mat-icon class="icon-size-5 ml-2" matPrefix
+                                    [svgIcon]="'heroicons_outline:phone-incoming'">
+                                </mat-icon>
+                                <input matInput placeholder="شماره تماس 3" [(ngModel)]="customer.personModel.phone3"
+                                    readonly>
+                            </mat-form-field>
+                        </ng-container>
+
+                        <!-- Customer Name -->
+                        <mat-form-field class="w-full">
+                            <mat-label>نام:</mat-label>
+                            <mat-icon class="icon-size-5 ml-2" matPrefix [svgIcon]="'heroicons_outline:user'">
+                            </mat-icon>
+                            <input matInput placeholder="نام را وارد نمایید"
+                                [(ngModel)]="customer?.personModel.firstName" required>
+                        </mat-form-field>
+
+
+                        <!-- Customer LastName -->
+                        <mat-form-field class="w-full">
+                            <mat-label>نام خانوادگی:</mat-label>
+                            <mat-icon class="icon-size-5 ml-2" matPrefix [svgIcon]="'heroicons_outline:users'">
+                            </mat-icon>
+                            <input matInput placeholder="نام خانوادگی را وارد نمایید"
+                                [(ngModel)]="customer?.personModel.lastName" required>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <mat-label>جنسیت </mat-label>
+                            <input matInput [(ngModel)]="customer?.personModel.genderBaseTitle" readonly />
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <mat-label>شهر </mat-label>
+                            <input matInput [(ngModel)]="customer?.personModel.zipCodePlaceTitle" readonly />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label> آدرس</mat-label>
+                            <input matInput [(ngModel)]="customer?.personModel.address" readonly />
+                        </mat-form-field>
+                        <mat-divider></mat-divider>
+                    </div>
+
+                </div>
+            </ng-container>
+
+            <!-- Conversation -->
+            <ng-container>
+                <div class="flex-auto border-l">
+                    <!-- Main -->
+                    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+                        <div class="w-full max-w-screen-xl mx-auto">
+
+                            <!-- Tabs -->
+                            <mat-tab-group class="sm:px-2">
+                                <!-- پرونده ها -->
+                                <mat-tab *ngFor="let case of cases" label="پرونده {{case.id}}({{case.projectTitle}})">
+                                    <ng-template matTabContent>
+                                        <div class="bg-gray-200 rounded p-1 " style="margin: -24px;">
+                                            <mat-tab-group class="sm:px-2">
+                                                <!-- سوالات -->
+                                                <mat-tab label="سوالات">
+                                                    <ng-template matTabContent>
+                                                        <app-questions-answers [caseId]="case.id">
+                                                        </app-questions-answers>
+                                                    </ng-template>
+                                                </mat-tab>
+                                                <!-- Call History -->
+                                                <mat-tab label="تاریخچه تماس">
+                                                    <ng-template matTabContent>
+
+                                                        <app-call-history [customerId]="customerId"></app-call-history>
+                                                    </ng-template>
+                                                </mat-tab>
+
+                                                <!-- Projects
+                                            <mat-tab label="پرونده ها">
+                                                <ng-template matTabContent>
+                                                    <app-cases-card [items]="cases"></app-cases-card>
+                                                </ng-template>
+                                            </mat-tab> -->
+
+                                            </mat-tab-group>
+                                        </div>
+                                    </ng-template>
+                                </mat-tab>
+
+
+                            </mat-tab-group>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>

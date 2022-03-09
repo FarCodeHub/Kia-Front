@@ -1,0 +1,173 @@
+
+
+<mat-drawer class="w-full p-4" [mode]="'side'" [opened]="true" [position]="'end'" [disableClose]="false" #matDrawer>
+
+
+
+<cmpt-add-edit-side-bar
+  [pageMode]="pageMode"
+  [form]="form"
+  pageName="تنظیمات"
+  [isHeader]="false"
+  (onClose)="cancel()"
+  (onSave)="save()">
+
+  <form [formGroup]="form">
+ <div class="flex justify-center">
+ <div class=" border rounded-md bg-gray-50 my-4 py-12 w-1/2" *ngIf="pageMode == 1">
+  <div class="relative flex flex-col flex-auto justify-center items-center p-4">
+    <div class="max-w-3xl">
+      <div class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
+        <div class="flex flex-auto items-end">
+            <div class="relative flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
+                <!-- Upload / Remove avatar -->
+                <div class="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+                <div class="absolute inset-0 flex items-center justify-center z-20">
+                    <div>
+                        <!-- <input #fileUpload type="file" name="fileUpload" accept="image/*" id="fileUpload" style="display: none" /> -->
+                        <input id="avatar-file-input" name="avatarFileInput"
+                            class="absolute h-0 w-0 opacity-0 invisible pointer-events-none" type="file"
+                            [multiple]="false" [accept]="'image/jpeg, image/png'"
+                            (change)="uploadAvatar(avatarFileInput.files[0])" #avatarFileInput>
+                        <label
+                            class="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer hover:bg-hover"
+                            for="avatar-file-input" matRipple>
+                            <mat-icon class="text-white" [svgIcon]="'heroicons_outline:camera'"></mat-icon>
+                        </label>
+                    </div>
+                    <div>
+                        <button mat-icon-button (click)="removeAvatar()">
+                            <mat-icon class="text-white" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <!-- Image/Letter -->
+                <img class="object-cover w-full h-full" *ngIf="uploadedFile.fullFilePath!=''"
+                    [src]="uploadedFile.fullFilePath">
+                <img class="object-cover w-full h-full" *ngIf="uploadedFile.fullFilePath==''"
+                    [src]="'assets/images/avatars/no-avatar.jpg'">
+            </div>
+        </div>
+        <div class=" flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+          {{ employee.personModel.fullName }}
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="px-5">
+        <div class="flex sm:items-center mb-2">
+          <mat-icon
+            [svgIcon]="'heroicons_outline:identification'"
+            class="ml-4 text-blue-300"
+          ></mat-icon>
+          <div class="ml-6 leading-6">
+            کد ملی : {{ employee.personModel.nationalCode }}
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+
+        <div class="flex sm:items-center my-2">
+          <mat-icon
+            [svgIcon]="'heroicons_outline:cake'"
+            class="ml-4 text-blue-400"
+          ></mat-icon>
+          <div class="ml-6 leading-6">
+            تاریخ تولد : {{ employee.personModel.birthDate | jalali }}
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+
+        <div class="flex sm:items-center my-2">
+          <mat-icon
+            [svgIcon]="'heroicons_outline:phone'"
+            class="ml-4 text-blue-500"
+          ></mat-icon>
+          <div class="ml-6 leading-6">
+            شماره تلفن : {{ employee.personModel.phone1 }}
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+        <div class="flex sm:items-center my-2">
+          <mat-icon
+            [svgIcon]="'heroicons_outline:user'"
+            class="ml-4 text-blue-600"
+          ></mat-icon>
+          <div class="ml-6 leading-6">
+            نام پدر : {{ employee.personModel.fatherName }}
+          </div>
+        </div>
+      </div>
+</div>
+</div>
+
+<div  class="flex flex-row justify-center">
+    <div class="w-1/2">
+    <mat-form-field>
+        <mat-label>
+            نام کاربری را وارد کنید
+        </mat-label>
+      <input
+        matInput
+        [placeholder]="'نام کاربری را وارد کنید'"
+        formControlName="username"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>
+            رمز عبور قبلی را وارد کنید
+        </mat-label>
+      <input
+        matInput
+        [placeholder]="'رمز عبور قبلی را وارد کنید'"
+        formControlName="password"
+        [type]="hide ? 'password' : 'text'"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hide = !hide"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide"
+      >
+        <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>
+            رمز عبور جدید را وارد کنید
+        </mat-label>
+      <input
+        matInput
+        [placeholder]="'رمز عبور جدید را وارد کنید'"
+        formControlName="newPassword"
+        [type]="hide ? 'newPassword' : 'text'"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hide = !hide"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide"
+      >
+        <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+    </mat-form-field>
+</div>
+</div>
+    <div>
+
+
+
+
+      <mat-spinner
+        diameter="40"
+        *ngIf="loaderService.isLoading | async"
+      ></mat-spinner>
+    </div>
+  </form>
+</cmpt-add-edit-side-bar>
+</mat-drawer>
+

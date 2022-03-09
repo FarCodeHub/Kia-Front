@@ -1,0 +1,118 @@
+<div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+    <mat-drawer-container class="flex-auto h-full">
+
+        <mat-drawer class="w-full sm:w-100 sm:w-128 shadow-md dark:bg-gray-900" [mode]="drawerMode"
+            [opened]="addVisible" [position]="'end'" [disableClose]="true" #matDrawer>
+
+            <app-addunit [updateItem]="updateItem" (onClose)="closeAdd($event)"></app-addunit>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex overflow-hidden">
+            <ng-container>
+                <div
+                    class="relative  border-l flex  flex-auto flex-col w-full min-w-0 lg:min-w-100 lg:max-w-100  bg-card dark:bg-transparent">
+                    <div class="flex flex-0 py-4 px-8 border-b bg-gray-50 dark:bg-transparent ">
+
+                        <div class="text-4xl flex-auto font-bold tracking-tight">تیم ها</div>
+                        <!-- Add product button -->
+                        <button class="mr-4" mat-flat-button [color]="'primary'" (click)="showAdd()">
+                            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                            <span class="ml-2 mr-1">افزودن</span>
+                        </button>
+                    </div>
+
+                    <div class="flex flex-col overflow-y-auto p-4">
+
+
+                        <mat-form-field class="flex-auto gt-xs:pr-3">
+                            <mat-label>شعبه</mat-label>
+                            <mat-select [(ngModel)]="selectedBranchId" (selectionChange)="onBranchChange()">
+                                <mat-option *ngFor="let item of branchs" [value]="item.id">{{
+                                    item.title }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <table mat-table [dataSource]="dataSource">
+                            <ng-container matColumnDef="title">
+                                <th mat-header-cell *matHeaderCellDef
+                                    class="shadow bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                                    <span [style.paddingLeft.px]="40"> عنوان واحد </span>
+                                </th>
+                                <td mat-cell *matCellDef="let data">
+                                    <button mat-icon-button [style.visibility]="!data.expandable ? 'hidden' : ''"
+                                        [style.marginRight.px]="data.level * 32" (click)="treeControl.toggle(data)">
+                                        <mat-icon class="mat-icon-rtl-mirror">
+                                            {{treeControl.isExpanded(data) ? 'expand_more' : 'chevron_right'}}
+                                        </mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="selectUnit(data)">
+                                        <mat-icon svgIcon="heroicons_outline:eye">
+                                        </mat-icon>
+
+                                    </button>
+                                    {{data.title}}
+
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="branchTitle">
+                                <th mat-header-cell *matHeaderCellDef
+                                    class="shadow bg-gray-50 dark:bg-black dark:bg-opacity-5"> شعبه </th>
+                                <td mat-cell *matCellDef="let data">
+                                    {{data.branchTitle}}
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                [ngClass]="{'bg-gray-300': updateItem?.id == row.id}"></tr>
+                        </table>
+
+                        <div *ngIf="treeUnit==null">
+                            <p class="p-8 sm:p-16 border-t text-2xl font-semibold tracking-tight text-center">
+                                هیچ شعبه ای انتخاب نشده است
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <!-- Details -->
+            <ng-container>
+                <div *ngIf="updateItem?.id"
+                    class="relative  border-l flex  flex-auto flex-col w-full min-w-0  dark:bg-transparent">
+                    <!-- ------------ Header ------------------ -->
+                    <!-- <cmpt-page-add-header title="کارمندان و سمت های تیم" (onShowAdd)="showAdd()">
+                    </cmpt-page-add-header> -->
+                    <!-- Main -->
+                    <div class="w-full border-t p-4">
+                        <div class="p-2 mx-auto bg-card shadow rounded-2xl">
+                            <!-- Tabs -->
+                            <mat-tab-group [animationDuration]="'0'">
+                                <!-- questions -->
+                                <mat-tab label="کارمندان " class=" bg-white">
+                                    <ng-template matTabContent>
+                                        <app-employees [unitId]="updateItem?.id"></app-employees>
+                                    </ng-template>
+                                </mat-tab>
+
+                                <!-- Call History -->
+                                <mat-tab label="سمت های تیم">
+                                    <ng-template matTabContent>
+                                        <!-- <app-positions></app-positions> -->
+                                        <app-unit-position [unit]="updateItem"></app-unit-position>
+                                    </ng-template>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </div>
+
+                    </div>
+                </div>
+            </ng-container>
+        </mat-drawer-content>
+
+
+    </mat-drawer-container>
+</div>

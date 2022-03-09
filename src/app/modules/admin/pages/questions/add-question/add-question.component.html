@@ -1,0 +1,45 @@
+<cmpt-add-edit-side-bar [pageMode]="pageMode" [form]="form" pageName="سوال" (onClose)="cancel()" (onSave)="save()">
+    <form [formGroup]="form" class="grid grid-cols-1 gap-2">
+
+        <mat-form-field>
+            <mat-label>
+                عنوان
+            </mat-label>
+            <input matInput [placeholder]="'عنوان را وارد کنید'" formControlName="title" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>
+                نوع سوال
+            </mat-label>
+            <mat-select [placeholder]="'نوع سوال را انتخاب کنید'" formControlName="questionTypBaseId">
+                <mat-option *ngFor="let item of questionTypes" [value]="item.id">{{ item.title }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-divider></mat-divider>
+
+        <mat-form-field>
+            <mat-label>
+                نوع جواب
+            </mat-label>
+            <mat-select [placeholder]="'نوع جواب را انتخاب کنید'" formControlName="answerTypeBaseId">
+                <mat-option *ngFor="let item of answerTypes" [value]="item.id">{{ item.title }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>
+                جواب ها
+            </mat-label>
+            <mat-select [placeholder]="'جواب ها را انتخاب کنید'" formControlName="answerOptionBaseTypeId">
+                <mat-option *ngFor="let item of answerOptionTypes" [value]="item.id">{{ item.title }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+
+    </form>
+</cmpt-add-edit-side-bar>

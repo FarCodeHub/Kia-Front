@@ -1,0 +1,229 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+
+    <mat-drawer-container class="flex-auto h-full dark:bg-transparent" (backdropClick)="onBackdropClicked()">
+
+        <!-- Drawer -->
+        <mat-drawer class="w-full sm:w-100  shadow-md dark:bg-gray-900" [mode]="drawerMode" [opened]="addVisible"
+            [position]="'end'" [disableClose]="true" #matDrawer>
+            <app-add-user [updateItem]="updateItem" (onClose)="closeAdd($event)"></app-add-user>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col border-l">
+
+            <!-- Main -->
+            <div class="flex flex-col flex-auto">
+
+                <!-- ------------ Header ------------------ -->
+                <cmpt-page-add-header title="افزودن کاربر" (onShowAdd)="showAdd()" actionPermissionName="user-add">
+                </cmpt-page-add-header>
+
+                <!-- ------------ Main Content ------------------ -->
+                <div class="p-6 sm:p-10 ">
+
+                    <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden  sm:overflow-y-auto">
+                        <c-data-table-filters-header [filters]="filters" (filtersChanged)="applyFilter($event)">
+                        </c-data-table-filters-header>
+
+                        <div class="data-grid overflow-x-auto">
+
+                            <div class="data-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                matSort matSortDisableClear>
+
+                                <div></div>
+                                <c-data-table-column title="نام شخص" field="lastName" [(filters)]="filters"
+                                    (filtersChanged)="applyFilter($event)">
+                                </c-data-table-column>
+
+                                <c-data-table-column title="نام کاربری" field="username" [(filters)]="filters"
+                                    (filtersChanged)="applyFilter($event)">
+                                </c-data-table-column>
+
+                                <c-data-table-column title="شماره تماس" field="phone" [(filters)]="filters"
+                                    (filtersChanged)="applyFilter($event)">
+                                </c-data-table-column>
+
+                                <c-data-table-column title="سمت - واحد" field="unitPositionTitle" [(filters)]="filters"
+                                    (filtersChanged)="applyFilter($event)">
+                                </c-data-table-column>
+
+                                <c-data-table-column title="کد ملی" field="identityCode" [(filters)]="filters"
+                                    (filtersChanged)="applyFilter($event)">
+                                </c-data-table-column>
+
+                                <c-data-table-column title="نقش ها" field="rolesTitleList" [(filters)]="filters"
+                                    (filtersChanged)="applyFilter($event)">
+                                </c-data-table-column>
+
+                                <div class="hidden md:block">
+
+                                </div>
+                                <div class="hidden md:block">
+
+                                </div>
+
+                            </div>
+
+                            <ng-container *ngFor="let item of items">
+                                <div class="data-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b bg-white">
+
+                                    <div class="hidden md:block">
+                                        <div class="flex-0 w-10 h-10 rounded-full overflow-hidden">
+                                            <img class="w-full h-full object-cover"
+                                                [src]="serverUrl+'/'+item.person.profilePhotoUrl">
+                                        </div>
+
+                                    </div>
+
+                                    <div class="hidden md:block">
+                                        {{item.person.firstName}} {{item.person.lastName}}
+                                    </div>
+
+
+                                    <div class="hidden md:block">
+                                        {{item.username}}
+                                    </div>
+
+                                    <div class="hidden sm:block">
+                                        {{item.person.phone1}}
+                                    </div>
+
+                                    <div class="hidden sm:block">
+                                        {{item.unitPositionTitle}}
+                                    </div>
+
+                                    <div class="hidden sm:block">
+                                        {{item.person.identityCode}}
+                                    </div>
+
+                                    <div class=" flex flex-wrap items-center ">
+                                        <ng-container *ngFor="let tag of item.userRolesTitle; trackBy: trackByFn">
+                                            <div
+                                                class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                                                <span class="text-md font-medium whitespace-nowrap">{{tag}}</span>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+
+
+
+
+
+                                    <div class="grid-title">
+                                        <button class="mx-2" mat-icon-button *hasPermission="['user-edit']"
+                                            (click)="editItem(item)">
+                                            <mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
+
+                                        </button>
+                                        <button class=" text-red-500" mat-icon-button *hasPermission="['user-delete']"
+                                            (click)="deleteItem(item)">
+                                            <mat-icon svgIcon="heroicons_outline:trash" class="text-red-500">
+                                            </mat-icon>
+
+                                        </button>
+                                    </div>
+
+                                    <div class="grid-title">
+
+                                    </div>
+                                </div>
+
+                            </ng-container>
+
+                        </div>
+
+                        <mat-paginator
+                            class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+                            [length]="pagination.length" [(pageIndex)]="pagination.pageIndex"
+                            [pageSize]="pagination.size" [pageSizeOptions]="[5, 10, 25, 100]"
+                            [showFirstLastButtons]="true"></mat-paginator>
+
+
+
+                        <ng-container *ngIf="pagination.length==0;">
+                            <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
+                                هیچ کاربری تعریف نشده است
+                            </div>
+                        </ng-container>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+        </mat-drawer-content>
+
+
+    </mat-drawer-container>
+</div>
+
+
+
+
+
+
+
+<!-- <div class="flex flex-col flex-auto min-w-0">
+    <div class="flex-auto p-6 sm:p-10">
+        <div class="max-w-3xl">
+            <app-add-user [updateItem]="updateItem"></app-add-user>
+        </div>
+    </div>
+
+    <div class="flex-auto p-6 sm:p-10">
+                    <ng-container *ngIf="(users$)">
+                        <ng-container *ngIf="users$.length > 0; else noUsers">
+                            <div class="data-grid">
+
+                                <div class="data-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                    matSort matSortDisableClear>
+
+                                    <div [mat-sort-header]="'fullName'">
+                                        نام شخص
+                                    </div>
+                                    <div [mat-sort-header]="'username'">
+                                        نام کاربری
+                                    </div>
+                                    <div  [mat-sort-header]="'phone'">
+                                            شماره تماس
+                                    </div>
+
+                                </div>
+
+                                <ng-container *ngIf="(users$)">
+                                    <ng-container *ngFor="let item of users$">
+                                        <div class="data-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b">
+
+                                            <div class="hidden md:block">
+                                                {{item.person.firstName}}  {{item.person.lastName}}
+                                            </div>
+
+
+                                            <div class="hidden md:block">
+                                                {{item.username}}
+                                            </div>
+
+                                            <div class="hidden sm:block">
+                                                {{item.person.phone1}}
+                                            </div>
+
+                                        </div>
+
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+
+
+                        </ng-container>
+                    </ng-container>
+
+
+                    <ng-template #noProducts>
+                        <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">There are no
+                            Uint!</div>
+                    </ng-template>
+    </div>
+</div> -->

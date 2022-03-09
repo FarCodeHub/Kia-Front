@@ -1,0 +1,302 @@
+<cmpt-add-edit-side-bar [pageMode]="pageMode" [form]="form" pageName="پیامک" (onClose)="cancel()" (onSave)="save()">
+
+    <form [formGroup]="form" class="grid grid-cols-3 gap-2">
+
+        <mat-form-field>
+
+            <mat-label> تاریخ انقضا را وارد کنید</mat-label>
+
+            <input matInput formControlName="endDateTime" [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+
+
+        <mat-form-field>
+            <mat-label>شماره سر خط را وارد کنید</mat-label>
+            <mat-select placeholder="شماره سر خط انتخاب کنید" formControlName="headLineNumberBaseId">
+                <mat-option *ngFor="let item of headLineNumbers$" [value]="item.id">{{ item.title }} - {{item.value}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>شماره بازخورد را وارد کنید</mat-label>
+            <input matInput placeholder="شماره بازخورد وارد کنید" formControlName="feedbackNumber"
+                (change)="isUsableFeedbackNumber(form.get('feedbackNumber').value,form.get('endDateTime').value)" />
+            <mat-error *ngIf="form.get('feedbackNumber')?.errors">
+                برای شماره انتخاب شده تبلیغ فعال وجود دارد
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>عنوان را وارد کنید</mat-label>
+            <input matInput placeholder="عنوان را وارد کنید" formControlName="title" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>متن را وارد کنید</mat-label>
+            <textarea matInput placeholder="متن را وارد کنید" formControlName="message"></textarea>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>توضیحات را وارد کنید</mat-label>
+            <input matInput placeholder="توضیحات را وارد کنید" formControlName="descriptions" />
+        </mat-form-field>
+
+
+        <!-- <mat-form-field>
+            <mat-label>نوع تبلیغ را وارد کنید</mat-label>
+            <mat-select
+                placeholder="نوع تبلیغ را وارد کنید"
+                formControlName="advertisementContentBaseId">
+                <mat-option
+                    *ngFor="let item of contents$"
+                    [value]="item.id"
+                    >{{item.title }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field> -->
+
+
+
+        <mat-form-field>
+            <mat-label>منبع را وارد کنید</mat-label>
+            <mat-select placeholder="منبع را انتخاب کنید" formControlName="advertisementSourceBaseId">
+                <mat-option value="1">
+                    دیتابیس
+                </mat-option>
+                <mat-option value="2">
+                    اکسل
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <ng-container *ngIf="form.get('advertisementSourceBaseId').value == '2' ">
+
+            <div class="col-12 pt-6 uploader">
+                <div class="mt-4 sm:mt-0">
+                    <button mat-flat-button [color]="'primary'" (click)="onClickUpload()">
+                        <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                        <span class="ml-2 mr-1">افزودن فایل اکسل</span>
+                    </button>
+                </div>
+
+                <input #fileUpload type="file" name="fileUpload" accept="*/*" id="fileUpload" style="display: none" />
+            </div>
+            <div class="bg-white" *ngIf="isUpload == true">
+                <a class=" flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card static">
+                    <div class=" aspect-w-9 aspect-h-6">
+
+                        <div class="static flex items-center justify-center">
+                            <div class="relative">
+                                <mat-icon class="icon-size-14 text-hint" [svgIcon]="'iconsmind:file'"
+                                    *ngIf="extentionFile != 'PNG' && extentionFile != 'JPG' && extentionFile !='JPEG'">
+                                </mat-icon>
+                                <div *ngIf="extentionFile != 'PNG' && extentionFile != 'JPG' && extentionFile !='JPEG'"
+                                    class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+                                    [class.bg-green-600]="extentionFile === 'XLSX'">
+                                    {{extentionFile}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                        <div class="truncate" [matTooltip]="fileName">{{fileName}}</div>
+
+                    </div>
+                </a>
+            </div>
+        </ng-container>
+
+
+    </form>
+
+    <ng-container *ngIf="form.get('advertisementSourceBaseId').value == '1' ">
+
+
+        <div class=" border rounded-md bg-gray-100">
+            <div class="relative flex flex-col">
+
+
+                <div class="bg-gray-300 flex p-4 items-center">
+                    <mat-icon svgIcon="heroicons_solid:filter" class="text-gray-500 icon-size-5 mx-2">
+                    </mat-icon>
+                    <span class="ml-2">
+                        جستجوی شماره های مورد نظر
+                    </span>
+                </div>
+
+                <div class="flex flex-col flex-auto p-4">
+
+
+                    <form [formGroup]="smsFilterForm" class="grid grid-cols-3 gap-2">
+                        <mat-form-field>
+                            <mat-label>آخرین وضعیت</mat-label>
+                            <mat-select formControlName="taskResultIds" multiple>
+                                <mat-option *ngFor="let item of taskResults" [value]="item.id">{{item.title}}
+                                </mat-option>
+                            </mat-select>
+
+                        </mat-form-field>
+
+
+
+                        <mat-form-field>
+                            <mat-label>تمام یا بخشی از آدرس را وارد کنید</mat-label>
+                            <input matInput placeholder="تمام یا بخشی از آدرس را وارد کنید" formControlName="address" />
+                        </mat-form-field>
+
+
+
+                        <mat-form-field>
+                            <mat-label>استان را انتخاب کنید</mat-label>
+                            <mat-select [placeholder]="'استان را انتخاب کنید'" formControlName="provinceId">
+                                <mat-option *ngFor="let item of provinces" [value]="item.id">{{ item.title }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <mat-label>شهرستان را انتخاب کنید</mat-label>
+                            <mat-select [placeholder]="'شهرستان را انتخاب کنید'" formControlName="zipCodeId">
+                                <mat-option *ngFor="let item of cities" [value]="item.id">{{ item.title }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <mat-label>اپراتورها</mat-label>
+                            <mat-select formControlName="operatorIds" multiple>
+                                <mat-option *ngFor="let item of operators" [value]="item.id">{{item.fullName}} -
+                                    {{item.unitPositionTitle}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                    </form>
+
+
+                    <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden  sm:overflow-y-auto">
+
+                        <ng-container>
+                            <div class="data-grid overflow-x-auto">
+
+                                <div class="data-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                    matSort matSortDisableClear>
+
+                                    <div [mat-sort-header]="'fullName'" class="border-l-2 border-gray-300">
+                                        <button mat-icon-button class="ml-2">
+                                            <!--[matMenuTriggerFor]="toggleLabelMenu"-->
+                                            <mat-icon svgIcon="heroicons_outline:filter"
+                                                class="text-gray-400 icon-size-5">
+                                            </mat-icon>
+                                        </button>
+                                        نام
+                                    </div>
+                                    <div [mat-sort-header]="'address'" class="border-l-2 border-gray-300">
+                                        <button mat-icon-button class="ml-2">
+                                            <mat-icon svgIcon="heroicons_outline:filter"
+                                                class="text-gray-400 icon-size-5">
+                                            </mat-icon>
+                                        </button>
+                                        آدرس
+                                    </div>
+
+                                    <div [mat-sort-header]="'phone'" class="border-l-2 border-gray-300">
+                                        <button mat-icon-button class="ml-2">
+                                            <mat-icon svgIcon="heroicons_outline:filter"
+                                                class="text-gray-400 icon-size-5">
+                                            </mat-icon>
+                                        </button>
+                                        تلفن
+                                    </div>
+
+                                    <div [mat-sort-header]="'lastTaskResultTitle'" class="border-l-2 border-gray-300">
+                                        <button mat-icon-button class="ml-2">
+                                            <mat-icon svgIcon="heroicons_outline:filter"
+                                                class="text-gray-400 icon-size-5">
+                                            </mat-icon>
+                                        </button>
+                                        اخرین اقدام
+                                    </div>
+
+                                    <div [mat-sort-header]="'operatorFullName'" class="border-l-2 border-gray-300">
+                                        <button mat-icon-button class="ml-2">
+                                            <mat-icon svgIcon="heroicons_outline:filter"
+                                                class="text-gray-400 icon-size-5">
+                                            </mat-icon>
+                                        </button>
+                                        اپراتور
+                                    </div>
+
+                                </div>
+
+                                <ng-container *ngFor="let item of items">
+                                    <div class="data-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b bg-white">
+
+
+
+                                        <div class="hidden md:block">
+                                            {{item.fullName}}
+                                        </div>
+
+
+                                        <div class="hidden md:block">
+                                            {{item.address}}
+                                        </div>
+
+                                        <div class="hidden sm:block">
+                                            {{item.phone}}
+                                        </div>
+
+                                        <div class="hidden sm:block">
+                                            {{item.lastTaskResultTitle}}
+                                        </div>
+                                        <div class="hidden sm:block">
+                                            {{item.operatorFullName}}
+                                        </div>
+                                        <div class="grid-title">
+
+                                        </div>
+                                    </div>
+
+                                </ng-container>
+
+                            </div>
+
+                            <mat-paginator
+                                class=" sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+                                [length]="pagination.length" [(pageIndex)]="pagination.pageIndex"
+                                [pageSize]="pagination.size" [pageSizeOptions]="[5, 10, 25, 100]"
+                                [showFirstLastButtons]="true"></mat-paginator>
+
+                        </ng-container>
+
+                        <ng-container *ngIf="pagination.length==0;">
+                            <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
+                                هیچ مخاطبی یافت نشد
+                            </div>
+                        </ng-container>
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+
+
+
+    </ng-container>
+
+
+
+</cmpt-add-edit-side-bar>

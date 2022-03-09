@@ -1,0 +1,27 @@
+<mat-menu #menu>
+    <div mat-menu-item mat-filter-item [disableRipple]="true" class="menu-title">
+        {{title}}
+    </div>
+    <div mat-menu-item mat-filter-item [disableRipple]="true">
+        <mat-form-field>
+            <mat-select [panelClass]="'mat-elevation-z10'" placeholder='' [(value)]="searchCondition">
+                <mat-option *ngFor="let  condition of conditionsList" [value]="condition">{{condition.label}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div mat-menu-item mat-filter-item [disableRipple]="true">
+        <mat-form-field>
+            <input matInput placeholder="جستجوی {{title}}" [(ngModel)]="searchValue">
+        </mat-form-field>
+    </div>
+
+    <div mat-menu-item [disableRipple]="true">
+        <button mat-raised-button class="mx-2" color="primary" (click)="applyFilter()">فیلتر</button>
+
+        <button mat-raised-button class="mx-2" (click)="clearColumn()">حذف</button>
+
+
+    </div>
+</mat-menu>

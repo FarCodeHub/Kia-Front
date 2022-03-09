@@ -1,0 +1,33 @@
+<form class=" border-t" [formGroup]="form" *ngIf="_unit">
+
+    <mat-selection-list formControlName="positions">
+        <mat-list-option *ngFor="let item of positions" [value]="item.id">
+            {{ item.title }}
+            <mat-divider></mat-divider>
+        </mat-list-option>
+    </mat-selection-list>
+
+    <!-- Footer -->
+    <div class="flex border-t mt-8 px-8 py-5 bg-gray-50dark:bg-gray-700">
+
+        <button class="px-6 ml-3" mat-flat-button [color]="'primary'" (click)="save()" [disabled]="saving">
+            <mat-spinner diameter="20" *ngIf="saving"></mat-spinner>
+
+            <mat-icon *ngIf="!saving" class="ml-2" [svgIcon]="'material_outline:save'">
+            </mat-icon>
+            <span>ثبت</span>
+        </button>
+
+
+        <button class="px-6 ml-3" type="button" mat-stroked-button (click)="reset()">
+            بازنشانی
+        </button>
+    </div>
+</form>
+
+<div *ngIf="_unit==null">
+    <p class="p-8 sm:p-16 border-t text-2xl font-semibold tracking-tight text-center">
+        هیچ تیمی انتخاب نشده است
+
+    </p>
+</div>

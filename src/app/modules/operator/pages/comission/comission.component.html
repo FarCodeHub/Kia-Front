@@ -1,0 +1,106 @@
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden dark:bg-transparent">
+
+    <!-- Header -->
+    <cmpt-page-add-header title="کمیسیون ها" [showAction]="false">
+    </cmpt-page-add-header>
+
+    <!-- Main -->
+    <div class="flex flex-auto overflow-hidden p-4">
+
+        <!-- cases list -->
+        <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
+            <c-data-table-filters-header [filters]="filters" (filtersChanged)="applyFilter($event)">
+            </c-data-table-filters-header>
+            <ng-container>
+                <div class="data-grid overflow-x-auto bg-card">
+
+                    <div class="data-grid z-10 sticky  top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary  dark:bg-black dark:bg-opacity-5"
+                        matSort matSortDisableClear>
+
+                        <c-data-table-column title="نام کارمند" field="title" [(filters)]="filters"
+                            (filtersChanged)="applyFilter($event)">
+                        </c-data-table-column>
+                        <c-data-table-column title="تاریخ قرارداد" field="uniqueName" [(filters)]="filters"
+                            (filtersChanged)="applyFilter($event)">
+                        </c-data-table-column>
+                        <c-data-table-column title="پرداخت شده" field="IsPaid" [(filters)]="filters"
+                            (filtersChanged)="applyFilter($event)">
+                        </c-data-table-column>
+                        <c-data-table-column title="تاریخ پرداخت" field="amount" [(filters)]="filters"
+                            (filtersChanged)="applyFilter($event)">
+                        </c-data-table-column>
+
+                        <c-data-table-column title="مبلغ " field="project" [(filters)]="filters"
+                            (filtersChanged)="applyFilter($event)">
+                        </c-data-table-column>
+
+                        <c-data-table-column title="پروژه" field="parent" [(filters)]="filters"
+                            (filtersChanged)="applyFilter($event)">
+                        </c-data-table-column>
+                    </div>
+
+                    <ng-container *ngFor="let item of items;">
+                        <div class="data-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b bg-white">
+
+
+                            <div class="hidden md:block">
+                                {{item.employeeFullName}}
+                            </div>
+
+                            <div class="hidden md:block">
+                                {{item.createdAt | jalalidate}}
+                            </div>
+
+                            <div class="hidden md:block text-center">
+
+                                <mat-icon class="text-green-500" *ngIf="item.isPaid"
+                                    svgIcon="heroicons_outline:check-circle"></mat-icon>
+                                <button class="px-3" *ngIf="!item.isPaid" mat-stroked-button (click)="pay(item)"
+                                    [disabled]="saving">
+                                    <mat-icon class="text-blue-600 ml-2" svgIcon="heroicons_outline:cash">
+                                    </mat-icon>
+                                    <span *ngIf="!saving">
+                                        ثبت پرداخت
+                                    </span>
+                                    <mat-progress-spinner *ngIf="saving" [diameter]="24" [mode]="'indeterminate'">
+                                    </mat-progress-spinner>
+
+                                </button>
+                            </div>
+                            <div class="hidden md:block">
+                                {{item.paidAt | jalalidate}}
+                            </div>
+
+                            <div class="hidden md:block">
+                                {{item.amount}}
+                            </div>
+
+                            <div class="hidden sm:block">
+                                {{item.projectTitle}}
+                            </div>
+
+
+
+                        </div>
+
+                    </ng-container>
+
+                </div>
+
+                <mat-paginator
+                    class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+                    [length]="pagination.length" [(pageIndex)]="pagination.pageIndex" [pageSize]="pagination.size"
+                    [pageSizeOptions]="[5, 10, 25, 100]" [showFirstLastButtons]="true"></mat-paginator>
+
+            </ng-container>
+
+            <ng-container *ngIf="items.length==0;">
+                <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
+                    هیچ کمیسیونی ثبت نشده است
+                </div>
+            </ng-container>
+        </div>
+
+    </div>
+
+</div>

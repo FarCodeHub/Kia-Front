@@ -1,0 +1,32 @@
+
+button[mat-button].btn-toggle {
+    position: absolute !important;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    min-width: 0rem !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    height: 1.5rem;
+    padding: 0 !important;
+    line-height: 1rem !important;
+    box-sizing: border-box;
+    min-width: 2rem;
+  }
+  .mat-menu-item,
+  .mat-menu-item-highlighted:not([disabled]),
+  .mat-menu-item.cdk-keyboard-focused:not([disabled]),
+  .mat-menu-item.cdk-program-focused:not([disabled]),
+  .mat-menu-item:hover:not([disabled]) {
+    background: #fff !important;
+    height: 64px !important;
+
+     .mat-form-field{
+       width: 180px;
+     }
+  }
+  
+  
+  .menu-title { 
+    font-weight: 300;
+    font-size: 1.5rem;
+  }

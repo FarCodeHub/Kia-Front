@@ -1,0 +1,59 @@
+<div class="p-4 rounded-md w-full">
+    <ng-container *ngIf="compact">
+        <div class="grid grid-cols-3" *ngFor="let qt of questionTypes">
+            <div *ngFor="let qa of qt.questionAnswers">
+                <div class="p-1">
+                    <mat-form-field class="w-full">
+                        <mat-label>{{qa.questionTitle}}</mat-label>
+                        <mat-icon class="icon-size-5 ml-2" matPrefix
+                            [svgIcon]="'heroicons_outline:question-mark-circle'">
+                        </mat-icon>
+                        <input matInput placeholder="متن خود را وارد نمایید" *ngIf="qa.answer" [(ngModel)]="qa.answer"
+                            readonly>
+                        <input matInput placeholder="متن خود را وارد نمایید" *ngIf="!qa.answer"
+                            [(ngModel)]="qa.answerBaseTitle" readonly>
+                    </mat-form-field>
+                </div>
+            </div>
+
+        </div>
+    </ng-container>
+    <ng-container *ngIf="!compact">
+
+
+        <mat-accordion multi>
+            <mat-expansion-panel *ngFor="let qt of questionTypes" [expanded]="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+
+                        <mat-icon>feed</mat-icon>
+                        {{qt.title}}
+                    </mat-panel-title>
+                    <mat-panel-description>
+
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <mat-divider></mat-divider>
+                <div class="grid grid-cols-2">
+                    <div *ngFor="let qa of qt.questionAnswers">
+                        <div class="p-2">
+                            <mat-form-field class="w-full">
+                                <mat-label>{{qa.questionTitle}}</mat-label>
+                                <mat-icon class="icon-size-5 ml-2" matPrefix
+                                    [svgIcon]="'heroicons_outline:question-mark-circle'">
+                                </mat-icon>
+                                <input matInput placeholder="متن خود را وارد نمایید" *ngIf="qa.answer"
+                                    [(ngModel)]="qa.answer" readonly>
+                                <input matInput placeholder="متن خود را وارد نمایید" *ngIf="!qa.answer"
+                                    [(ngModel)]="qa.answerBaseTitle" readonly>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                </div>
+
+            </mat-expansion-panel>
+
+        </mat-accordion>
+    </ng-container>
+</div>

@@ -1,0 +1,58 @@
+<div class="bg-gray-50 p-4 rounded-md">
+
+
+    <mat-accordion multi>
+        <mat-expansion-panel *ngFor="let qt of questionTypes" [expanded]="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+
+                    <mat-icon>feed</mat-icon>
+                    {{qt.title}}
+                </mat-panel-title>
+                <mat-panel-description>
+
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="p-2">
+                <div *ngFor="let qa of qt.questions" class="col-lg-5 col-md-6 col-sm-8 col-xs-12">
+                    <!-- <ng-container *ngIf="qa.answerTypeBaseId==99">
+                    <mat-label>{{qa.title}}:</mat-label>
+
+                    <mat-button-toggle-group name="fontStyle" aria-label="Font Style" >
+                        <mat-button-toggle *ngFor="let a of qa.answerOptionBases" value="bold">
+                            {{a.title}}
+                        </mat-button-toggle>
+                    </mat-button-toggle-group>
+                </ng-container> -->
+
+                    <mat-form-field class="w-full" *ngIf="qa.answerTypeBaseId==99">
+                        <mat-label>{{qa.title}}</mat-label>
+                        <mat-icon class="icon-size-5 ml-2" matPrefix
+                            [svgIcon]="'heroicons_outline:question-mark-circle'">
+                        </mat-icon>
+                        <mat-select [(ngModel)]="qa.answer">
+                            <mat-option *ngFor="let a of qa.answerOptionBases" [value]="a.id">
+                                {{a.title}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+
+                    <mat-form-field class="w-full" *ngIf="qa.answerTypeBaseId==100">
+                        <mat-label>{{qa.title}}</mat-label>
+                        <mat-icon class="icon-size-5 ml-2" matPrefix
+                            [svgIcon]="'heroicons_outline:question-mark-circle'">
+                        </mat-icon>
+                        <input matInput placeholder="متن خود را وارد نمایید" [(ngModel)]="qa.answer" required>
+                    </mat-form-field>
+
+                    <mat-divider></mat-divider>
+                </div>
+
+            </div>
+
+        </mat-expansion-panel>
+
+    </mat-accordion>
+</div>

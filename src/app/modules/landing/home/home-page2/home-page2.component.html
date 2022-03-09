@@ -1,0 +1,67 @@
+
+<div class="flex flex-col">
+<div class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
+    <!-- Questions -->
+    <div class="flex flex-col flex-auto bg-card shadow rounded-2xl p-6">
+
+        <div class="flex flex-col sm:flex-row items-start justify-between">
+            <div class="text-lg font-medium tracking-tight leading-6 truncate">سوالات پرسیده شده
+            </div>
+            <div class="mt-3 sm:mt-0 sm:ml-2">
+                <mat-button-toggle-group value="today" #scheduleDaySelector="matButtonToggleGroup">
+                    <mat-button-toggle value="today">امروز</mat-button-toggle>
+                    <mat-button-toggle value="tomorrow">هفته</mat-button-toggle>
+                    <mat-button-toggle value="tomorrow">ماه</mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+        </div>
+        <div class="flex flex-col mt-2 divide-y">
+            <apx-chart class="flex-auto w-full h-80" [chart]="questionsOptions.chart" [colors]="questionsOptions.colors"
+                [dataLabels]="questionsOptions.dataLabels" [grid]="questionsOptions.grid"
+                [labels]="questionsOptions.labels" [legend]="questionsOptions.legend"
+                [plotOptions]="questionsOptions.plotOptions" [series]="questionsOptions.series"
+                [states]="questionsOptions.states" [stroke]="questionsOptions.stroke"
+                [tooltip]="questionsOptions.tooltip" [xaxis]="questionsOptions.xaxis" [yaxis]="questionsOptions.yaxis">
+            </apx-chart>
+        </div>
+
+
+    </div>
+    <!-- Overview -->
+    <div class="flex flex-col flex-auto bg-card shadow rounded-2xl p-6">
+
+        <div class="flex flex-col sm:flex-row items-start justify-between">
+            <div class="text-lg font-medium tracking-tight leading-6 truncate">پاسخ های سوال
+                <mat-select [(ngModel)]="selectedQuestionId" (selectionChange)="onQuestionChanged()">
+                    <mat-option *ngFor="let r of questions" [value]="r.id">
+                        {{r.title}}
+                    </mat-option>
+                </mat-select>
+            </div>
+            <div class="mt-3 sm:mt-0 sm:ml-2">
+                <mat-button-toggle-group value="today" #scheduleDaySelector="matButtonToggleGroup">
+                    <mat-button-toggle-group value="today" #scheduleDaySelector="matButtonToggleGroup">
+                        <mat-button-toggle value="today">امروز</mat-button-toggle>
+                        <mat-button-toggle value="tomorrow">هفته</mat-button-toggle>
+                        <mat-button-toggle value="tomorrow">ماه</mat-button-toggle>
+                    </mat-button-toggle-group>
+                </mat-button-toggle-group>
+            </div>
+        </div>
+        <div class="flex flex-col mt-2 divide-y">
+            <apx-chart class="flex-auto w-full h-80" [chart]="answersOptions.chart" [colors]="answersOptions.colors"
+                [dataLabels]="answersOptions.dataLabels" [grid]="answersOptions.grid" [labels]="answersOptions.labels"
+                [legend]="answersOptions.legend" [plotOptions]="answersOptions.plotOptions"
+                [series]="answersOptions.series" [states]="answersOptions.states" [stroke]="answersOptions.stroke"
+                [tooltip]="answersOptions.tooltip" [xaxis]="answersOptions.xaxis" [yaxis]="answersOptions.yaxis">
+            </apx-chart>
+        </div>
+
+    </div>
+
+
+</div>
+<div class=" grid-flow-row gap-6 w-full mt-8 sm:mt-4 bg-card shadow rounded-2xl p-6">
+<app-inbox [isDone]="true" ></app-inbox>
+</div>
+</div>

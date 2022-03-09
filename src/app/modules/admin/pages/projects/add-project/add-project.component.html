@@ -1,0 +1,101 @@
+<cmpt-add-edit-side-bar [pageMode]="pageMode" [form]="form" pageName="پروژه" (onClose)="cancel()" (onSave)="save()">
+  <form [formGroup]="form" class="grid grid-cols-1 gap-2">
+
+
+    <mat-form-field>
+      <input matInput [placeholder]="' عنوان را وارد کنید'" formControlName="title" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [placeholder]="'آدرس را وارد کنید'" formControlName="address" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select [placeholder]="'اولویت را مشخص کنید'" formControlName="priorityBaseId">
+        <mat-option *ngFor="let item of priorities" [value]="item.id">{{ item.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="space-y-2">
+      <ng-container *ngFor="let subItem of form.get('children')['controls']; let i = index">
+        <div class="flex">
+
+          <mat-form-field>
+            <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_solid:puzzle'"></mat-icon>
+            <input matInput [formControl]="subItem.get('title')" [placeholder]="'مشخصات'">
+          </mat-form-field>
+          <!-- Remove phone number -->
+
+          <div class="flex items-center w-10 pr-2">
+            <button class="w-8 h-8 min-h-8" mat-icon-button (click)="removeSubItem(i)" matTooltip="حذف">
+              <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="group inline-flex items-center mb-2 -mr-4 px-4 rounded cursor-pointer" (click)="addSubItem()">
+      <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+      <span class="mr-2 font-medium text-secondary group-hover:underline">افزودن آیتم</span>
+    </div>
+
+    <div class="col-12 uploader">
+      <button class="px-6 ml-3" type="button" mat-stroked-button (click)="onClickUpload()">
+        <mat-icon class="ml-2" [svgIcon]="'material_outline:upload_file'">
+        </mat-icon>
+        <span>
+          آپلود فایل
+        </span>
+
+      </button>
+
+
+      <input #fileUpload type="file" name="fileUpload" accept="*/*" id="fileUpload" style="display: none" />
+    </div>
+    <mat-progress-bar mode="determinate" [value]="uploadedFile.progress"
+      *ngIf="uploadedFile.progressStatus=='in-progress'"></mat-progress-bar>
+    <div class="bg-white" *ngIf="uploadedFile.progressStatus=='uploaded'">
+
+      <a class="static flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card "
+        [href]="uploadedFile.fullFilePath" target="_blank">
+        <div class=" aspect-w-9 aspect-h-6">
+
+          <div class="static flex items-center justify-center">
+            <img src="assets/images/icons/remove.png" (click)="removeImage()"
+              class="absolute top-0 left-0 z-10 w-8 cursor-pointer">
+            <!-- Icons -->
+            <div class="relative ">
+              <mat-icon class="icon-size-14 text-hint" *ngIf="!isFileImage()" [svgIcon]="'iconsmind:file'"></mat-icon>
+              <div *ngIf="!isFileImage()"
+                class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white "
+                [class.bg-red-600]="uploadedFile.extention === 'PDF'"
+                [class.bg-blue-600]="uploadedFile.extention === 'DOC'"
+                [class.bg-green-600]="uploadedFile.extention === 'XLSX'"
+                [class.bg-gray-600]="uploadedFile.extention=== 'TXT'"
+                [class.bg-amber-600]="uploadedFile.extention === 'JPG'"
+                [class.bg-amber-600]="uploadedFile.extention === 'PNG'">
+                {{uploadedFile.extention}}
+              </div>
+              <img [src]="uploadedFile.fullFilePath" *ngIf="isFileImage()">
+            </div>
+
+          </div>
+
+        </div>
+        <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+          <div class="truncate" [matTooltip]="fileName">{{fileName}}</div>
+
+        </div>
+      </a>
+    </div>
+
+    <mat-divider class="mt-4 mb-4"></mat-divider>
+
+    <div>
+      <app-load-map-v2 (locationChange)="locationChange($event)" [latLong]="lonLat"></app-load-map-v2>
+    </div>
+
+  </form>
+</cmpt-add-edit-side-bar>

@@ -1,0 +1,148 @@
+<!-- Navigation -->
+<fuse-vertical-navigation class="dark bg-teal-900 print:hidden" [mode]="isScreenSmall ? 'over' : 'side'"
+    [name]="'mainNavigation'" [navigation]="navigation.default" [opened]="!isScreenSmall">
+    <!-- Navigation header hook -->
+    <ng-container fuseVerticalNavigationContentHeader>
+        <div class="flex items-center w-full p-4 pl-6">
+            <!-- Logo -->
+            <div class="flex items-center justify-center">
+                <img class="w-16" src="assets/images/logo/logo.png">
+            </div>
+            <!-- Components -->
+            <div class="flex items-center ml-auto">
+                <!-- <notifications></notifications> -->
+                <user [showAvatar]="false"></user>
+            </div>
+        </div>
+        <!-- User -->
+        <div class="flex flex-col items-center w-full p-4">
+            <div class="relative w-24 h-24">
+                <img class="w-full h-full rounded-full" *ngIf="user.person.profilePhotoUrl != null && user.person.profilePhotoUrl != undefined"
+                    [src]="serverUrl+'/'+user.person.profilePhotoUrl" alt="User avatar">
+                <mat-icon class="icon-size-24" *ngIf="user.person.profilePhotoUrl == null ||user.person.profilePhotoUrl == undefined"
+                    [svgIcon]="'heroicons_solid:user-circle'">
+                </mat-icon>
+            </div>
+            <div class="flex flex-col items-center justify-center w-full mt-6">
+                <div
+                    class="w-full whitespace-nowrap overflow-ellipsis overflow-hidden text-center leading-normal font-medium">
+                    {{user.person.firstName}}&nbsp; {{user.person.lastName}}
+                </div>
+                <div
+                    class="w-full whitespace-nowrap overflow-ellipsis overflow-hidden text-center leading-normal font-medium text-secondary">
+                    {{user.unitPositionTitle}}
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <!-- Navigation footer hook -->
+    <ng-container fuseVerticalNavigationContentFooter>
+        <div class="flex flex-0 items-center justify-center h-16 pr-6 pl-2 mt-2 mb-4 opacity-12">
+            <img class="max-w-36" src="assets/images/logo/logo-dark.png">
+        </div>
+    </ng-container>
+</fuse-vertical-navigation>
+
+<!-- Wrapper -->
+<div class="flex flex-col flex-auto w-full min-w-0 overflow-hidden">
+
+    <!-- Header -->
+    <div
+        class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent print:hidden">
+        <!-- Navigation toggle button -->
+        <button mat-icon-button (click)="toggleNavigation('mainNavigation')">
+            <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
+        </button>
+        <!-- Components -->
+        <div class="flex items-center pl-2 ml-auto space-x-1 sm:space-x-2">
+            <!-- <languages></languages> -->
+            <fuse-fullscreen class="hidden md:block"></fuse-fullscreen>
+            <!-- <search [appearance]="'bar'"></search>
+            <shortcuts></shortcuts>-->
+            <!-- <messages></messages> -->
+        </div>
+        <div class=" border-l px-2">
+            امروز:
+            {{today|jalalidate}}
+        </div>
+        <ng-container *ngIf="extentionNumber?.length>0">
+            <div class="flex items-center px-2" *ngIf="user.status=='ready'">
+                <mat-progress-spinner *ngIf="waiting" [diameter]="24" [mode]="'indeterminate'">
+                </mat-progress-spinner>
+                <button *ngIf="!waiting" mat-icon-button (click)="setStatus(false)">
+                    <mat-icon [svgIcon]="'heroicons_outline:play'" class="icon-size-10 text-green-600"></mat-icon>
+                </button>
+                <div
+                    class=" py-0.5 px-3 rounded-full font-medium text-green-600 bg-green-100 dark:text-gray-300 dark:bg-gray-700">
+                    آماده
+                </div>
+            </div>
+            <div class="flex items-center" *ngIf="user.status=='busy'">
+                <mat-progress-spinner *ngIf="waiting" [diameter]="24" [mode]="'indeterminate'">
+                </mat-progress-spinner>
+                <button *ngIf="!waiting" mat-icon-button (click)="setStatus(true)">
+                    <mat-icon [svgIcon]="'heroicons_outline:pause'" class="icon-size-10 text-red-600"></mat-icon>
+                </button>
+                <div
+                    class="py-0.5 px-3 rounded-full font-medium text-red-600 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                    مشغول
+                </div>
+            </div>
+            <div class="flex items-center" *ngIf="user.status!='busy' && user.status!='ready'">
+                <mat-progress-spinner *ngIf="waiting" [diameter]="24" [mode]="'indeterminate'">
+                </mat-progress-spinner>
+                <button *ngIf="!waiting" mat-icon-button (click)="setStatus(true)">
+                    <mat-icon [svgIcon]="'heroicons_outline:pause'" class=" icon-size-10 text-gray-600"></mat-icon>
+                </button>
+                <div
+                    class="py-0.5 px-3 rounded-full font-medium text-gray-600 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                    عدم فعالیت
+                </div>
+            </div>
+        </ng-container>
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-col flex-auto  overflow-hidden">
+        <!-- *ngIf="true" hack is required here for router-outlet to work correctly.
+             Otherwise, layout changes won't be registered and the view won't be updated! -->
+
+        <router-outlet *ngIf="true"></router-outlet>
+    </div>
+
+    <!-- Footer -->
+    <!--<div class="relative flex flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
+        <span class="font-medium text-secondary">Fuse &copy; {{currentYear}}</span>
+    </div>-->
+
+</div>
+
+
+
+<!-- Quick Status -->
+<fuse-drawer class="w-screen min-w-screen sm:w-16 sm:min-w-16" fixed transparentOverlay [mode]="'side'"
+    [name]="'وضعیت کاربران'" [opened]="true" [position]="'left'" #statusDrawer>
+
+
+    <div class="w-full  h-full ">
+        <div class="h-16 flex justify-center items-center  cursor-pointer border-b">
+            <mat-icon class="icon-size-6" [svgIcon]="'heroicons_outline:lightning-bolt'">
+            </mat-icon>
+        </div>
+        <ng-container *ngFor="let operator of operators">
+            <div class=" h-16 mx-auto relative py-3">
+                <div class="w-12 h-12 mx-auto rounded-full overflow-hidden">
+                    <img class="w-full h-full object-cover" src="{{serverUrl}}/{{operator.profilePhotoUrl}}">
+
+                </div>
+                <span class="absolute bottom-0 right-0 w-3 h-3 mr-3 rounded-full border-2" [ngClass]="
+                   {'bg-green-500':operator.status=='ready',
+                    'bg-amber-500':operator.status=='wait',
+                    'bg-red-500':operator.status=='out',
+                    'bg-gray-500':operator.status=='unregistered'}"></span>
+
+            </div>
+        </ng-container>
+    </div>
+
+</fuse-drawer>

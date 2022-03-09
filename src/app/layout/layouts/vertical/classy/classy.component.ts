@@ -1,0 +1,148 @@
+import { environment } from 'environments/environment';
+
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
+import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
+import { Navigation } from 'app/core/navigation/navigation.types';
+import { NavigationService } from 'app/core/navigation/navigation.service';
+import { UserService } from 'app/core/user/user.service';
+import { User } from 'app/shared/models/user.model';
+import { OperatorService } from 'app/modules/operator/services/operator.service';
+import { Operator } from 'app/shared/models/operator.model';
+
+@Component({
+    selector: 'classy-layout',
+    templateUrl: './classy.component.html',
+    encapsulation: ViewEncapsulation.None
+})
+export class ClassyLayoutComponent implements OnInit, OnDestroy {
+    isScreenSmall: boolean;
+    navigation: Navigation;
+    user: User;
+    serverUrl = environment.imageUrl;
+    waiting: boolean = false;
+    extentionNumber = "";
+    today = new Date();
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+    operators: Operator[];
+    /**
+     * Constructor
+     */
+    constructor(
+        private _activatedRoute: ActivatedRoute,
+        private _router: Router,
+        private _navigationService: NavigationService,
+        private _userService: UserService,
+        private operatorService: OperatorService,
+        private _fuseMediaWatcherService: FuseMediaWatcherService,
+        private _fuseNavigationService: FuseNavigationService,
+    ) {
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Accessors
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Getter for current year
+     */
+    get currentYear(): number {
+        return new Date().getFullYear();
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle hooks
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * On init
+     */
+    ngOnInit(): void {
+        // Subscribe to navigation data
+        this._navigationService.navigation$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((navigation: Navigation) => {
+                this.navigation = navigation;
+            });
+
+        // Subscribe to the user service
+        this._userService.user$
+            .pipe((takeUntil(this._unsubscribeAll)))
+            .subscribe((user: User) => {
+                console.log(user);
+                this.user = user;
+            });
+        this.extentionNumber = this._userService.currentUser.extentionNumber;
+        // Subscribe to the user service
+        this.operatorService.getStatus(this.extentionNumber).subscribe(result => {
+            // const status = JSON.parse(result);
+            for (const [key, value] of Object.entries(result)) {
+
+                this.user.status = String(value) as ("ready" | "busy" | "away" | "unregistered");
+            }
+        });
+        // Subscribe to media changes
+        this._fuseMediaWatcherService.onMediaChange$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(({ matchingAliases }) => {
+
+                // Check if the screen is small
+                this.isScreenSmall = !matchingAliases.includes('md');
+            });
+
+        const me = this;
+        this.operatorService.getAll().subscribe(result => {
+            this.operators = result.data;
+
+            this.operatorService.getStatus("").subscribe(result => {
+                // const status = JSON.parse(result);
+                for (const [key, value] of Object.entries(result)) {
+                    let opt = me.operators.find(x => x.extentionNumber == Number(key));
+                    opt.status = String(value);
+                }
+            });
+
+        });
+    }
+
+    /**
+     * On destroy
+     */
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Toggle navigation
+     *
+     * @param name
+     */
+    toggleNavigation(name: string): void {
+        // Get the navigation
+        const navigation = this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>(name);
+
+        if (navigation) {
+            // Toggle the opened status
+            navigation.toggle();
+        }
+    }
+
+    setStatus(mode: boolean) {
+        this.waiting = true;
+
+        this._userService.updateStatus(mode).subscribe(x => {
+            if (x.objResult)
+                this.user.status = mode ? 'ready' : 'busy';
+            this.waiting = false;
+        });
+    }
+}

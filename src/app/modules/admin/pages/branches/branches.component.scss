@@ -1,0 +1,22 @@
+
+.data-grid {
+    grid-template-columns: 48px auto 40px;
+
+    @screen sm {
+        grid-template-columns: auto 200px 215px;
+    }
+
+    @screen md {
+        grid-template-columns: 200px auto 215px 215px;
+    }
+
+    @screen lg {
+        grid-template-columns: 200px auto 215px 215px;
+    }
+}
+
+
+.grid-title
+{
+    font-weight: 500;
+}

@@ -1,0 +1,33 @@
+<cmpt-add-edit-side-bar [pageMode]="pageMode" [form]="form" pageName="تیم" (onClose)="cancel()" (onSave)="save()">
+    <form [formGroup]="form">
+
+        <div class="flex">
+            <mat-form-field class="flex-auto">
+                <mat-label>نام واحد</mat-label>
+                <input matInput [placeholder]="'نام واحد را وارد کنید'" formControlName="title" />
+            </mat-form-field>
+        </div>
+        <div class="flex flex-col gt-xs:flex-row">
+
+
+            <mat-form-field class="flex-auto gt-xs:pl-3">
+                <mat-label>زیر مجموعه</mat-label>
+                <mat-select [placeholder]="'واحد والد را انتخاب کنید'" formControlName="parentId">
+                    <mat-option *ngFor="let item of units" [value]="item.id">{{ item.title }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <mat-divider class=" mb-4"></mat-divider>
+
+        <p class="text-lg font-medium">انتخاب سمت</p>
+
+        <mat-selection-list formControlName="positionList" class="max-h-60 overflow-y-auto">
+            <mat-list-option *ngFor="let item of positions" [value]="item.id">
+                {{ item.title }}
+                <mat-divider></mat-divider>
+            </mat-list-option>
+        </mat-selection-list>
+    </form>
+</cmpt-add-edit-side-bar>

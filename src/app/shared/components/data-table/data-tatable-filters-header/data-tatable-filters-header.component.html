@@ -1,0 +1,28 @@
+<ng-container *ngIf="Object.keys(filters).length>0">
+    <div class="bg-gray-300 flex flex-auto items-center">
+        <!-- <mat-icon svgIcon="mat_outline:filter_list" class="m-2  text-gray-100 icon-size-7"></mat-icon> -->
+        <mat-icon svgIcon="heroicons_solid:filter" class="text-gray-500 icon-size-5 mx-2">
+        </mat-icon>
+        <span class="ml-2">
+            فیلتر ها:
+        </span>
+        <div class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 bg-gray-500 text-gray-100 dark:text-gray-300 dark:bg-gray-700"
+            *ngFor="let key of Object.keys(filters)">
+
+            <span class="text-md font-medium whitespace-nowrap" class="ml-2">{{filters[key].title}}
+                {{filters[key].condition.symbol}}&nbsp;{{filters[key].value}}</span>
+
+
+            <button mat-icon-button mat-filter-item (click)="removeFilter(key)">
+                <mat-icon svgIcon="material_outline:remove_circle_outline" class="text-red-200 icon-size-5">
+                </mat-icon>
+            </button>
+        </div>
+
+        <button mat-flat-button mat-filter-item *ngIf="Object.keys(filters).length>2" (click)="removeAll()"
+            class="bg-amber-500">
+
+            <span class="text-gray-100">حذف همه </span>
+        </button>
+    </div>
+</ng-container>

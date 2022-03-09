@@ -1,0 +1,73 @@
+<form [formGroup]="selectTaskForm">
+
+
+    <mat-form-field class="w-full" *ngIf="isDescriptions">
+        <mat-label>
+            توضیحات
+        </mat-label>
+        <input matInput [placeholder]="'توضیحات را وارد کنید'" formControlName="descriptions" />
+    </mat-form-field>
+
+    <mat-form-field class="w-full" *ngIf="isDateTime">
+
+        <mat-label> تاریخ انجام را وارد کنید</mat-label>
+        <input matInput formControlName="duaAt" [matDatepicker]="picker">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+
+    </mat-form-field>
+    <div class="flex flex-row p-2" *ngIf="isDateTime">
+        <mat-form-field class="w-full">
+            <mat-label> دقیقه</mat-label>
+
+            <mat-select [placeholder]="'دقیقه را انتخاب کنید'" formControlName="minutes">
+                <mat-option *ngFor="let item of minutesTime" [value]="item">
+                    {{item}}
+                </mat-option>
+            </mat-select>
+
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+
+            <mat-label>ساعت</mat-label>
+            <mat-select [placeholder]="'ساعت را انتخاب کنید'" formControlName="hours">
+                <mat-option *ngFor="let item of hoursTime" [value]="item">
+                    {{item}}
+                </mat-option>
+            </mat-select>
+
+        </mat-form-field>
+
+    </div>
+    <mat-form-field class="w-full" *ngIf="isEmployee">
+        <mat-label>
+            انتخاب کارمندان
+        </mat-label>
+        <mat-select [placeholder]="'کارمند را انتخاب کنید'" formControlName="assignToEmployeeId">
+            <mat-option *ngFor="let item of employees" [value]="item.id">
+                {{ item.personModel.fullName}} {{ item.unitPositionTitle}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+
+    <div class="flex border-t mt-8 px-8 py-5 bg-gray-50dark:bg-gray-700">
+
+        <button class="px-6 ml-3" mat-flat-button [color]="'primary'" (click)="endTask()">
+
+
+            <mat-icon class="ml-2" [svgIcon]="'heroicons_outline:check'">
+            </mat-icon>
+            <span>تایید</span>
+        </button>
+
+
+        <button class="px-6 ml-3" type="button" mat-stroked-button (click)="close()">
+            انصراف
+        </button>
+    </div>
+
+
+
+</form>

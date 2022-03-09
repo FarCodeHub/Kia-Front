@@ -1,0 +1,79 @@
+<fuse-card class="flex flex-col w-full p-8 m-4">
+    <!-- Main -->
+
+    <form [formGroup]="personForm">
+        <!-- Activity feed -->
+        <div class="w-full max-w-3xl">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <!--<mat-form-field appearance="outline">
+                        <mat-label>معلم مربوطه</mat-label>
+                         <mat-select [(ngModel)]="student.CurrentTeacherId" name="type">
+                        <mat-option *ngFor="let t of schoolTeachers" [value]="t.Id">
+                            {{t.FullName}}
+                        </mat-option>
+                    </mat-select> 
+                    </mat-form-field>-->
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <mat-form-field appearance="outline" class="mat-form-field-infix">
+                        <mat-label>کد ملی:</mat-label>
+                        <input matInput placeholder="کد ملی را وارد نمایید" formControlName="nationalCode" required>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <mat-form-field appearance="outline">
+                        <mat-label>نام:</mat-label>
+                        <input matInput placeholder="نام را وارد نمایید" formControlName="firstName" required>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <mat-form-field appearance="outline">
+                        <mat-label>نام خانوادگی:</mat-label>
+                        <input matInput placeholder="نام خانوادگی را وارد نمایید" formControlName="lastName" required>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <mat-form-field appearance="outline">
+                        <mat-label>جنسیت</mat-label>
+                        <mat-select formControlName="genderBaseId" name="genderBaseId">
+                            <mat-option [value]="1">
+                                مذکر
+                            </mat-option>
+                            <mat-option [value]="2">
+                                مونث
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <mat-form-field appearance="outline">
+                        <mat-label>تاریخ تولد:</mat-label>
+                        <input matInput placeholder="تاریخ تولد را وارد نمایید" [matDatepicker]="picker"
+                            formControlName="birthDate" readonly required>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <!-- <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <mat-form-field appearance="outline">
+                    <mat-label>شغل پدر:</mat-label>
+                    <input matInput placeholder="شغل پدر را وارد نمایید" [(ngModel)]="student.FatherOccupation"
+                        required>
+                </mat-form-field>
+            </div> -->
+
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <mat-form-field appearance="outline">
+                        <mat-label> آدرس:</mat-label>
+                        <input matInput placeholder="آدرس را وارد نمایید" formControlName="address" required>
+                    </mat-form-field>
+                </div>
+
+
+            </div>
+        </div>
+    </form>
+
+</fuse-card>

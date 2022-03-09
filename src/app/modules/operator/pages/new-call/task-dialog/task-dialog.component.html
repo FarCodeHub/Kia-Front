@@ -1,0 +1,56 @@
+
+    <form [formGroup]="form" class="grid grid-cols-1 gap-2 p-12">
+        <div>
+        <mat-form-field>
+            <mat-label>
+                توضیحات
+            </mat-label>
+            <input matInput [placeholder]="'توضیحات را وارد کنید'" formControlName="descriptions" />
+        </mat-form-field>
+
+        <mat-form-field>
+
+            <mat-label> تاریخ انجام را وارد کنید</mat-label>
+            <input matInput formControlName="duaAt" [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+
+        </mat-form-field>
+        <div class="flex flex-row p-2">
+            <mat-form-field>
+                    <mat-label> دقیقه</mat-label>
+                    <input matInput [placeholder]="'دقیقه را وارد کنید'" formControlName="minutes" />
+                </mat-form-field>
+
+                <mat-form-field>
+                <mat-label>ساعت</mat-label>
+                <input matInput [placeholder]="'ساعت را وارد کنید'" formControlName="hours" />
+                </mat-form-field>
+
+        </div>
+
+
+
+        <mat-form-field>
+            <mat-label>
+               انتخاب کارمندان
+            </mat-label>
+            <mat-select [placeholder]="'کارمند را انتخاب کنید'" formControlName="employeeId">
+                <mat-option *ngFor="let item of employees" [value]="item.id">
+                    {{ item.personModel.fullName}} {{ item.unitPositionTitle}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+
+        <div class="flex border-t mt-8 px-8 py-5 bg-gray-50dark:bg-gray-700">
+            <button class="px-6 ml-3" mat-flat-button [color]="'primary'" (click)="save()">
+                <mat-icon class="ml-2" [svgIcon]="'heroicons_outline:plus'">
+                </mat-icon>
+                <span>ثبت</span>
+            </button>
+        </div>
+
+
+    </div>
+    </form>

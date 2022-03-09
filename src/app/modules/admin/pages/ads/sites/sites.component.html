@@ -1,0 +1,411 @@
+<div class="w-full inset-0 flex flex-col min-w-0 overflow-hidden">
+
+
+    <mat-drawer-container class="flex-auto h-full dark:bg-transparent" (backdropClick)="onBackdropClicked()">
+
+        <mat-drawer class="w-full sm:w-100 sm:w-128 shadow-md dark:bg-gray-900" [mode]="drawerMode"
+            [opened]="addVisible" [position]="'end'" [disableClose]="true" #matDrawer>
+
+
+            <app-add-ads-into-site [sourceId]="sourceId" [updateItem]="updateItem" (onClose)="closeAdd($event)">
+            </app-add-ads-into-site>
+
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col border-l">
+
+
+            <div class="flex flex-col flex-auto">
+
+
+                <cmpt-page-add-header [title]="sourceId.uniqueName == 'divar'?'تبلیغات دیوار':'تبلیغات شیپور'"
+                    (onShowAdd)="showAdd()">
+                </cmpt-page-add-header>
+
+
+                <div class="p-6 sm:p-10 ">
+                    <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden  sm:overflow-y-auto">
+
+                        <c-data-table-filters-header [filters]="filters" (filtersChanged)="applyFilter($event)">
+                        </c-data-table-filters-header>
+
+                        <ng-container>
+                            <div class="data-grid overflow-x-auto">
+
+                                <div class="data-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                    matSort matSortDisableClear>
+
+
+                                    <c-data-table-column title="عنوان" field="title" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+
+                                    <c-data-table-column title="مبلغ" field="expense" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+
+                                    <c-data-table-column title=" تاریخ شروع" field="startDateTime" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+
+
+                                    <c-data-table-column title="زمان انقضا" field="endDateTime" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+
+                                    <c-data-table-column title="شماره سرخط" field="headLineTitle" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+
+                                    <c-data-table-column title="شماره بازخورد" field="feedBackNumber"
+                                        [(filters)]="filters" (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+
+                                    <c-data-table-column title=" توضیحات" field="descriptions" [(filters)]="filters"
+                                        (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+
+
+                                    <c-data-table-column title="ایجاد کننده" field="createUserName"
+                                        [(filters)]="filters" (filtersChanged)="applyFilter($event)">
+                                    </c-data-table-column>
+
+                                    <div class="hidden md:block">
+
+                                    </div>
+                                    <div class="hidden md:block">
+
+                                    </div>
+
+                                </div>
+
+                                <ng-container *ngFor="let item of items">
+                                    <div class="data-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b bg-white">
+
+
+
+                                        <div class="grid-title">
+                                            {{ item.title }}
+                                        </div>
+                                        <div class="grid-title">
+                                            {{ item.expense }}
+                                        </div>
+                                        <div class="grid-title">
+                                            {{ item.startDateTime | jalali }}
+                                        </div>
+                                        <div class="grid-title">
+                                            {{ item.endDateTime | jalali }}
+                                        </div>
+
+                                        <div class="hidden sm:block">
+                                            {{ item.headLineNumberBaseTitle }}
+                                        </div>
+
+                                        <div class="hidden sm:block">
+                                            {{ item.feedbackNumber }}
+                                        </div>
+
+                                        <div class="hidden sm:block">
+                                            {{ item.descriptions }}
+                                        </div>
+
+                                        <div class="grid-title">
+                                            {{ item.createdByFullName }}
+                                        </div>
+
+
+                                        <div class="grid-title">
+                                            <button class="mx-2" mat-icon-button (click)="editItem(item)">
+                                                <mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
+
+                                            </button>
+                                            <button class=" text-red-500" mat-icon-button (click)="deleteItem(item)">
+                                                <mat-icon svgIcon="heroicons_outline:trash" class="text-red-500">
+                                                </mat-icon>
+
+                                            </button>
+                                        </div>
+
+
+                                        <div class="grid-title">
+
+                                        </div>
+                                    </div>
+
+                                </ng-container>
+
+                            </div>
+
+                            <mat-paginator
+                                class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+                                [length]="pagination.length" [(pageIndex)]="pagination.pageIndex"
+                                [pageSize]="pagination.size" [pageSizeOptions]="[5, 10, 25, 100]"
+                                [showFirstLastButtons]="true"></mat-paginator>
+
+                        </ng-container>
+
+                        <ng-container *ngIf="pagination.length==0;">
+                            <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
+                                هیچ تبلیغی تعریف نشده است
+                            </div>
+                        </ng-container>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>
+
+
+<!-- <div class="sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden">
+    <cmpt-page-add-header *ngIf="PageName.Shaypoor == sourceId" title="تبلیغات شیپور" [isLoading]="loaderService.isLoading" (onShowAdd)="showAdd()">
+    </cmpt-page-add-header>
+    <cmpt-page-add-header *ngIf="PageName.Divar == sourceId" title="تبلیغات دیوار" [isLoading]="loaderService.isLoading" (onShowAdd)="showAdd()">
+    </cmpt-page-add-header>
+    <div class="p-6 sm:p-10" *ngIf="addVisible">
+        <app-add-ads-into-site [updateItem]="updateItem" (onClose)="closeAdd($event)"></app-add-ads-into-site>
+
+    </div>
+    <div class="p-6 sm:p-10">
+        <ng-container *ngIf="(siteAds$ | async) as siteAds">
+            <ng-container *ngIf="siteAds.data.length > 0; else noSiteAds">
+                <div class="data-grid">
+                    <div class="
+                        data-grid
+                        z-10
+                        sticky
+                        top-0
+                        grid
+                        gap-4
+                        py-4
+                        px-6
+                        md:px-8
+                        shadow
+                        text-md
+                        font-semibold
+                        text-secondary
+                        bg-gray-50
+                        dark:bg-black dark:bg-opacity-5
+                    " matSort matSortDisableClear>
+                        <div class="hidden md:block" [mat-sort-header]="'title'">
+                            عنوان
+                        </div>
+
+                        <div class="hidden md:block" [mat-sort-header]="'expense'">
+                            مبلغ
+                        </div>
+
+                        <div class="hidden md:block" [mat-sort-header]="'endDateTime'">
+                            تاریخ اتمام
+                        </div>
+
+                        <div class="hidden md:block" [mat-sort-header]="'createUserName'">
+                            ایجاد کننده
+                        </div>
+                        <div class="hidden md:block" [mat-sort-header]="'startDateTime'">
+                            تاریخ ایجاد
+                        </div>
+
+                        <div class="hidden md:block" [mat-sort-header]="'edit'">
+                            ویرایش
+                        </div>
+                        <div class="hidden md:block" [mat-sort-header]="'delete'">
+                            حذف
+                        </div>
+                    </div>
+
+                    <ng-container *ngIf="(siteAds$ | async) as siteAds">
+                        <ng-container *ngFor="let item of siteAds.data;trackBy: trackByFn">
+                            <div class="
+                                data-grid
+                                grid
+                                items-center
+                                gap-4
+                                py-3
+                                px-6
+                                md:px-8
+                                border-b">
+
+                                <div class="grid-title">
+                                    {{ item.title }}
+                                </div>
+                                <div class="grid-title">
+                                    {{ item.expense }}
+                                </div>
+
+                                <div class="grid-title">
+                                    {{ item.endDateTime | jalali }}
+                                </div>
+
+                                <div class="grid-title">
+                                    {{ item.CreateUserName }}
+                                </div>
+
+                                <div class="grid-title">
+                                    {{ item.startDateTime | jalali }}
+                                </div>
+
+
+
+                                <div class="grid-title">
+                                    <button class="px-6 mx-3" mat-flat-button [color]="'primary'"
+                                    (click)="editItem(item)">
+                                    <mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
+                                    ویرایش
+                                </button>
+                                </div>
+
+
+                                <div class="grid-title">
+                                    <button class="px-6 mx-3 text-red-500" mat-button (click)="deleteItem(item)">
+                                        <mat-icon svgIcon="heroicons_outline:trash" class="text-red-500"></mat-icon>
+                                        حذف
+                                    </button>
+                                </div>
+
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+
+
+            </ng-container>
+        </ng-container>
+        <ng-template #noInstagramAds>
+            <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">There are no
+                Site Ads!</div>
+        </ng-template>
+    </div>
+</div> -->
+
+
+
+
+<!-- <div class="flex flex-col flex-auto min-w-0">
+    <div class="flex-auto p-6 sm:p-10">
+        <div class="max-w-3xl">
+            <app-add-ads-into-site [sourceId]="sourceId" [updateItem]="updateItem"></app-add-ads-into-site>
+        </div>
+    </div>
+
+    <div class="flex-auto p-6 sm:p-10">
+        <ng-container *ngIf="(siteAds$ | async) as siteAds">
+            <ng-container *ngIf="siteAds.data.length > 0; else noSiteAds">
+                <div class="data-grid">
+                    <div class="
+                        data-grid
+                        z-10
+                        sticky
+                        top-0
+                        grid
+                        gap-4
+                        py-4
+                        px-6
+                        md:px-8
+                        shadow
+                        text-md
+                        font-semibold
+                        text-secondary
+                        bg-gray-50
+                        dark:bg-black dark:bg-opacity-5
+                    " matSort matSortDisableClear>
+                        <div class="hidden md:block" [mat-sort-header]="'title'">
+                            عنوان
+                        </div>
+
+                        <div class="hidden md:block" [mat-sort-header]="'expense'">
+                            مبلغ
+                        </div>
+
+                        <div class="hidden md:block" [mat-sort-header]="'endDateTime'">
+                            تاریخ اتمام
+                        </div>
+
+                        <div class="hidden md:block" [mat-sort-header]="'createUserName'">
+                            ایجاد کننده
+                        </div>
+                        <div class="hidden md:block" [mat-sort-header]="'startDateTime'">
+                            تاریخ ایجاد
+                        </div>
+
+                        <div class="hidden md:block" [mat-sort-header]="'edit'">
+                            ویرایش
+                        </div>
+                        <div class="hidden md:block" [mat-sort-header]="'delete'">
+                            حذف
+                        </div>
+                    </div>
+
+                    <ng-container *ngIf="(siteAds$ | async) as siteAds">
+                        <ng-container *ngFor="let item of siteAds.data;trackBy: trackByFn">
+                            <div class="
+                                data-grid
+                                grid
+                                items-center
+                                gap-4
+                                py-3
+                                px-6
+                                md:px-8
+                                border-b">
+
+                                <div class="grid-title">
+                                    {{ item.title }}
+                                </div>
+                                <div class="grid-title">
+                                    {{ item.expense }}
+                                </div>
+
+                                <div class="grid-title">
+                                    {{ item.endDateTime | jalali }}
+                                </div>
+
+                                <div class="grid-title">
+                                    {{ item.CreateUserName }}
+                                </div>
+
+                                <div class="grid-title">
+                                    {{ item.startDateTime | jalali }}
+                                </div>
+
+
+
+                                <div class="grid-title">
+                                    <button class="px-6 ml-3" mat-flat-button [color]="'primary'"
+                                        (click)="editItem(item)">
+                                        ویرایش
+                                    </button>
+                                </div>
+
+
+                                <div class="grid-title">
+                                    <button class="px-6 ml-3" mat-flat-button [color]="'primary'"
+                                        (click)="deleteItem(item)">
+                                        حذف
+                                    </button>
+                                </div>
+
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+
+
+            </ng-container>
+        </ng-container>
+
+
+        <ng-template #noInstagramAds>
+            <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">There are no
+                Site Ads!</div>
+        </ng-template>
+    </div>
+</div> -->

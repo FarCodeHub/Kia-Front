@@ -1,0 +1,126 @@
+<div class="bg-gray-50 p-4 rounded-md">
+
+    <!-- Main -->
+    <div class="flex flex-col flex-auto px-2 py-2 sm:px-4 sm:pb-20">
+
+        <!-- Activity feed -->
+        <div class="w-full max-w-3xl">
+
+
+
+            <ng-container *ngIf="calls; else loading">
+                <ng-container *ngIf="calls.length; else noActivity">
+                    <div class="mt-1">
+                        <ol>
+                            <!-- Activities -->
+                            <ng-container
+                                *ngFor="let call of calls; let i = index; let first = first; let last = last; trackBy: trackByFn">
+
+                                <!-- Date separator -->
+                                <ng-container *ngIf="first || !isSameDay(call.createdAt, calls[i - 1].createdAt)">
+                                    <li class="relative flex py-1">
+                                        <div
+                                            class="relative py-2 px-8 text-md font-medium leading-5 rounded-full bg-primary text-on-primary">
+                                            {{getRelativeFormat(call.createdAt)}}
+                                        </div>
+                                    </li>
+                                </ng-container>
+
+                                <!-- Activity -->
+                                <li class="relative flex py-7">
+                                    <!-- Line -->
+                                    <ng-container *ngIf="!last && isSameDay(call.createdAt, calls[i + 1].createdAt)">
+                                        <div
+                                            class="absolute top-7 right-5 w-0.5 h-full -mr-px bg-gray-300 dark:bg-gray-600">
+                                        </div>
+                                    </ng-container>
+
+                                    <div class="relative flex flex-auto">
+                                        <!-- Icon -->
+                                        <ng-container>
+                                            <div class="flex flex-shrink-0 items-center justify-center w-10 h-10 ml-4 rounded-full "
+                                                [ngClass]="{'bg-green-600':call.typeBaseUniqueName=='incomingCall',
+                                                            'bg-blue-500':call.typeBaseUniqueName=='outgoingCall'}">
+                                                <mat-icon class="icon-size-5 text-white"
+                                                    *ngIf="call.typeBaseUniqueName=='incomingCall'"
+                                                    [svgIcon]="'heroicons_outline:phone-incoming'">
+                                                </mat-icon>
+                                                <mat-icon class="icon-size-5 text-white"
+                                                    *ngIf="call.typeBaseUniqueName=='outgoingCall'"
+                                                    [svgIcon]="'heroicons_outline:phone-outgoing'">
+                                                </mat-icon>
+                                            </div>
+                                        </ng-container>
+
+                                        <!-- Content -->
+                                        <div class="flex flex-col flex-auto items-start">
+                                            <!-- Title -->
+                                            <div class="flex items-center border-b">
+                                                <div class="flex-auto">
+                                                    مشاور: {{call.employeeFullName}}
+                                                </div>
+                                                <div class="pr-7">
+                                                    <button mat-icon-button (click)="playVoice(call.voipUniqueNumber)">
+                                                        <mat-icon svgIcon="heroicons_outline:play"
+                                                            class="text-blue-500">
+                                                        </mat-icon>
+
+                                                    </button>
+                                                    <button *ngIf="call.taskId"
+                                                        class="px-6 ml-3 bg-blue-100 text-blue-500" type="button"
+                                                        mat-flat-button (click)="detail(call)">
+                                                        جزییات
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="flex flex-col  sm:items-center mt-2 sm:mt-1 sm:space-x-2 text-md leading-5">
+                                                <!-- Date -->
+
+                                                <div class="flex items-center">
+                                                    <mat-icon class="icon-size-5 text-hint"
+                                                        [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                                                    <div class="mr-1.5 text-md text-secondary">
+                                                        {{call.createdAt | date:'MMM dd, h:mm a'}}
+                                                    </div>
+                                                </div>
+                                                <!-- Call Number -->
+                                                <div class="flex items-center">
+                                                    <mat-icon class="icon-size-5 text-hint"
+                                                        [svgIcon]="'heroicons_solid:phone'"></mat-icon>
+                                                    <div class="mr-1.5 text-md text-secondary">
+                                                        {{call.customerConnectedNumber}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w-full rounded-lg bg-gray-200 dark:bg-gray-800">
+                                                <app-questions-answers
+                                                    *ngIf="selectedCallTaskId && selectedCallTaskId==call.taskId"
+                                                    [compact]="true" [taskId]="selectedCallTaskId">
+                                                </app-questions-answers>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ng-container>
+                        </ol>
+                    </div>
+                </ng-container>
+            </ng-container>
+
+            <!-- Loading template -->
+            <ng-template #loading>
+                <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+                در حال بارگزاری...
+
+            </ng-template>
+
+            <!-- No Activity template -->
+            <ng-template #noActivity>
+                هیچ تاریخچه ای قبلی وجود ندارد...
+            </ng-template>
+
+        </div>
+    </div>
+
+</div>

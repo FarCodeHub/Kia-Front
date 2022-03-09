@@ -1,0 +1,347 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Header -->
+    <div class="bg-card">
+        <div class="flex flex-col w-full max-w-screen-xl mx-auto px-6 sm:px-8">
+            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
+                <!-- Avatar and name -->
+                <div class="flex flex-auto items-center min-w-0">
+                    <div class="flex-0 w-16 h-16 rounded-full overflow-hidden">
+                        <img class="w-full h-full object-cover" [src]="serverUrl+'/'+user.person.profilePhotoUrl">
+                    </div>
+                    <div class="flex flex-col min-w-0 mr-4">
+                        <ng-container *transloco="let t">
+                            <div
+                                class="text-2xl md:text-5xr font-semibold tracking-tight leading-7 md:leading-snug truncate">
+                                {{t('welcome-back')}}, {{user.person.firstName}}</div>
+                        </ng-container>
+                        <!-- <div class="flex items-center">
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:bell'"></mat-icon>
+                            <div class="mr-1.5 leading-6 truncate text-secondary">شما 2 تا پیام و 15 کار جدید دارید
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <!-- Actions -->
+                <div class="flex items-center mt-6 sm:mt-0 sm:mr-2 space-x-3">
+                    <!-- <button class="fuse-mat-button-rounded bg-accent-700" mat-flat-button [color]="'accent'">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                        <span class="mr-2">پیام ها</span>
+                    </button> -->
+                    <button class="fuse-mat-button-rounded" mat-flat-button [color]="'primary'" (click)="settings()">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:cog'"></mat-icon>
+                        <span class="mr-2">پروفایل</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+        <div class="w-full max-w-screen-xl mx-auto">
+            <!-- Tabs -->
+            <mat-tab-group class="sm:px-2" [animationDuration]="'0'">
+
+                <!-- Home -->
+                <mat-tab label="عملکرد کلی">
+                    <ng-template matTabContent>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
+                            <!-- Summary -->
+                            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">تماس ها</div>
+                                    <div class="ml-2 -mt-2 -mr-3">
+                                        <button mat-icon-button [matMenuTriggerFor]="summaryMenu">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #summaryMenu="matMenu">
+                                            <button mat-menu-item>دیروز</button>
+                                            <button mat-menu-item>2 روز پیش</button>
+                                            <button mat-menu-item>3 روز پیش</button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-center mt-2">
+                                    <div
+                                        class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">
+                                        {{censuses?.totalCommunications}}
+                                    </div>
+                                    <div class="text-lg font-medium text-blue-600 dark:text-blue-500"> تماس
+                                    </div>
+                                    <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                                        <div class="text-md font-medium truncate">تماس ورودی:</div>
+                                        <div class="ml-1.5 text-lg font-semibold">
+                                            {{censuses?.incomingCommunications}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Overdue -->
+                            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">تعداد کل پرونده
+                                    </div>
+                                    <div class="ml-2 -mt-2 -mr-3">
+                                        <button mat-icon-button [matMenuTriggerFor]="overdueMenu">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #overdueMenu="matMenu">
+                                            <button mat-menu-item>دیروز</button>
+                                            <button mat-menu-item>2 روز پیش</button>
+                                            <button mat-menu-item>3 روز پیش</button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-center mt-2">
+                                    <div
+                                        class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500">
+                                        {{censuses?.totalCases}}
+                                    </div>
+                                    <div class="text-lg font-medium text-red-600 dark:text-red-500"> پرونده</div>
+                                    <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                                        <div class="text-md font-medium truncate">پرونده باز:</div>
+                                        <div class="ml-1.5 text-lg font-semibold">
+                                            {{censuses?.openCases}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Issues -->
+                            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">قرارداد شده</div>
+                                    <div class="ml-2 -mt-2 -mr-3">
+                                        <button mat-icon-button [matMenuTriggerFor]="issuesMenu">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #issuesMenu="matMenu">
+                                            <button mat-menu-item>دیروز</button>
+                                            <button mat-menu-item>2 روز پیش</button>
+                                            <button mat-menu-item>3 روز پیش</button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-center mt-2">
+                                    <div
+                                        class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-amber-500">
+                                        {{censuses?.totalContracts}}
+                                    </div>
+                                    <div class="text-lg font-medium text-amber-600 dark:text-amber-500">باز</div>
+                                    <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                                        <div class="text-md font-medium truncate"> کمیسیون ها:</div>
+                                        <div class="ml-1.5 text-lg font-semibold"> {{censuses?.totalCommmissionsCount}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Features -->
+                            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">کمیسیون</div>
+                                    <div class="ml-2 -mt-2 -mr-3">
+                                        <button mat-icon-button [matMenuTriggerFor]="featuresMenu">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #featuresMenu="matMenu">
+                                            <button mat-menu-item>دیروز</button>
+                                            <button mat-menu-item>2 روز پیش</button>
+                                            <button mat-menu-item>3 روز پیش</button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-center mt-2">
+                                    <div
+                                        class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">
+                                        {{censuses?.totalCommmissionsAmount}}
+                                    </div>
+                                    <div class="text-lg font-medium text-green-600 dark:text-green-500">کل کمیسیون</div>
+                                    <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                                        <div class="text-md font-medium truncate">پرداخت شده:</div>
+                                        <div class="ml-1.5 text-lg font-semibold"> {{censuses?.paidCommmissionsAmount}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Github issues summary -->
+                            <div
+                                class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                <div class="flex flex-col sm:flex-row items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">عملکرد
+                                        خلاصه</div>
+                                    <div class="mt-3 sm:mt-0 sm:ml-2">
+                                        <mat-button-toggle-group value="this-week"
+                                            #githubIssuesWeekSelector="matButtonToggleGroup">
+                                            <mat-button-toggle value="last-week">هفته پیش</mat-button-toggle>
+                                            <mat-button-toggle value="this-week">این هفته</mat-button-toggle>
+                                        </mat-button-toggle-group>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
+                                    <!-- Questions -->
+                                    <div class="flex flex-col flex-auto">
+                                        <div class="font-medium text-secondary">سوالات</div>
+                                        <div class="flex flex-col flex-auto">
+                                            <apx-chart class="flex-auto w-full h-80" [chart]="questionsOptions.chart"
+                                                [colors]="questionsOptions.colors"
+                                                [dataLabels]="questionsOptions.dataLabels"
+                                                [grid]="questionsOptions.grid" [labels]="questionsOptions.labels"
+                                                [legend]="questionsOptions.legend"
+                                                [plotOptions]="questionsOptions.plotOptions"
+                                                [series]="questionsOptions.series" [states]="questionsOptions.states"
+                                                [stroke]="questionsOptions.stroke" [tooltip]="questionsOptions.tooltip"
+                                                [xaxis]="questionsOptions.xaxis" [yaxis]="questionsOptions.yaxis">
+                                            </apx-chart>
+                                        </div>
+                                    </div>
+                                    <!-- Overview -->
+                                    <div class="flex flex-col">
+                                        <div class="font-medium text-secondary">بررسی کلی</div>
+                                        <div class="flex-auto grid grid-cols-4 gap-4 mt-6">
+                                            <!-- New issues -->
+                                            <div
+                                                class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-indigo-50 text-indigo-800 dark:bg-white dark:bg-opacity-5 dark:text-indigo-400">
+                                                <div
+                                                    class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight">
+                                                    {{censuses?.totalTasks}}
+                                                </div>
+                                                <div class="mt-1 text-sm sm:text-lg font-medium"> وظایف ها</div>
+                                            </div>
+                                            <!-- Closed -->
+                                            <div
+                                                class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-green-50 text-green-800 dark:bg-white dark:bg-opacity-5 dark:text-green-500">
+                                                <div
+                                                    class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight">
+                                                    {{censuses?.totalCases}}
+                                                </div>
+                                                <div class="mt-1 text-sm sm:text-lg font-medium">تعداد پرونده ها </div>
+                                            </div>
+                                            <!-- Fixed -->
+                                            <div
+                                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
+                                                <div class="text-5xl font-semibold leading-none tracking-tight">
+                                                    {{censuses?.doneTasks}}
+                                                </div>
+                                                <div class="mt-1 text-sm font-medium text-center">وظایف انجام شده</div>
+                                            </div>
+                                            <!-- Won't fix -->
+                                            <div
+                                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
+                                                <div class="text-5xl font-semibold leading-none tracking-tight">
+                                                    {{censuses?.notDoneTasks}}
+                                                </div>
+                                                <div class="mt-1 text-sm font-medium text-center">وظایف باز </div>
+                                            </div>
+                                            <!-- Re-opened -->
+                                            <div
+                                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
+                                                <div class="text-5xl font-semibold leading-none tracking-tight">
+                                                    {{censuses?.openCases}}
+                                                </div>
+                                                <div class="mt-1 text-sm font-medium text-center">پرونده های باز</div>
+                                            </div>
+                                            <!-- Needs triage -->
+                                            <div
+                                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
+                                                <div class="text-5xl font-semibold leading-none tracking-tight">
+                                                    {{censuses?.closedCases}}
+                                                </div>
+                                                <div class="mt-1 text-sm font-medium text-center"> پرونده های بسته شده
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Task distribution -->
+                            <div
+                                class="sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+
+                            </div>
+                            <!-- Schedule -->
+                            <div
+                                class="sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                <div class="flex flex-col sm:flex-row items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">یادآوری تماس
+                                    </div>
+                                    <div class="mt-3 sm:mt-0 sm:ml-2">
+                                        <mat-button-toggle-group value="today"
+                                            #scheduleDaySelector="matButtonToggleGroup">
+                                            <mat-button-toggle value="today">امروز</mat-button-toggle>
+                                            <mat-button-toggle value="tomorrow">فردا</mat-button-toggle>
+                                        </mat-button-toggle-group>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col mt-2 divide-y">
+                                    <ng-container *ngFor="let scheduleItem of schedules; trackBy: trackByFn">
+                                        <div class="flex flex-row items-center justify-between py-4 px-0.5">
+                                            <div class="flex flex-col">
+                                                <div class="font-medium">{{scheduleItem.customerFullName}}</div>
+                                                <div
+                                                    class="flex flex-col sm:flex-row sm:items-center -ml-0.5 mt-2 sm:mt-1 space-y-1 sm:space-y-0 sm:space-x-3">
+                                                    <ng-container *ngIf="scheduleItem.duoAt">
+                                                        <div class="flex items-center">
+                                                            <mat-icon class="icon-size-5 text-hint"
+                                                                [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                                                            <div class="ml-1.5 text-md text-secondary">
+                                                                {{scheduleItem.duoAt| date:'HH:mm'}}</div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="scheduleItem.projectTitle">
+                                                        <div class="flex items-center">
+                                                            <mat-icon class="icon-size-5 text-hint"
+                                                                [svgIcon]="'heroicons_solid:location-marker'">
+                                                            </mat-icon>
+                                                            <div class="ml-1.5 text-md text-secondary">
+                                                                {{scheduleItem.projectTitle}}</div>
+                                                        </div>
+                                                    </ng-container>
+
+                                                    <ng-container *ngIf="scheduleItem.customerPhoneNumber1">
+                                                        <div class="flex items-center">
+                                                            <mat-icon class="icon-size-5 text-hint"
+                                                                [svgIcon]="'heroicons_solid:phone'">
+                                                            </mat-icon>
+                                                            <div class="ml-1.5 text-md text-secondary">
+                                                                {{scheduleItem.customerPhoneNumber1}}</div>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                            <button mat-icon-button>
+                                                <mat-icon [svgIcon]="'heroicons_solid:chevron-left'"></mat-icon>
+                                            </button>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </mat-tab>
+
+                <!-- Budget -->
+                <mat-tab label="ریز عملکرد">
+                    <ng-template matTabContent>
+
+                        <app-home-page2></app-home-page2>
+
+                    </ng-template>
+                </mat-tab>
+
+                <!-- Cases Report -->
+                <mat-tab label="پرونده ها">
+                    <ng-template matTabContent>
+                        <app-cases-card [items]="cases"></app-cases-card>
+                    </ng-template>
+                </mat-tab>
+
+            </mat-tab-group>
+        </div>
+    </div>
+
+</div>

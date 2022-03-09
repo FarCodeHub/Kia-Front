@@ -1,0 +1,255 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden bg-gray-400">
+
+    <mat-drawer-container class="flex-auto h-full dark:bg-transparent">
+
+        <!-- Drawer -->
+        <mat-drawer *ngIf="pageMode== PageMode.Add" class="w-full  shadow-md dark:bg-gray-900" [mode]="drawerMode"
+            [opened]="addVisible" [position]="'end'" [disableClose]="true" #matDrawer>
+            <app-add-customer [updateItem]="customer" (onClose)="closeAdd($event)"></app-add-customer>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col border-l">
+
+            <div class="p-4 sm:overflow-y-auto">
+
+
+                <div class="flex flex-col mt-4 bg-card shadow rounded ">
+                    <div class="bg-gray-50 dark:bg-gray-700 flex p-8 border-b">
+                        <div class="flex-auto">
+                            <p class="text-lg font-medium">اطلاعات مشتری</p>
+                            <p class="text-secondary">در صورت تکمیل نبودن اطلاعات می توانید با استفاده از دکمه ویرایش
+                                اطلاعات را
+                                تکمیل
+                                نمایید</p>
+                        </div>
+                        <button *ngIf="pageMode== PageMode.Add" class="px-6 ml-3" mat-flat-button [color]="'primary'"
+                            (click)="editCustomer()">
+                            <mat-icon class="ml-2" [svgIcon]="'heroicons_outline:pencil'">
+                            </mat-icon>
+                            ویرایش مشخصات
+                        </button>
+                        <button *ngIf="pageMode!= PageMode.Add" class="px-6 ml-3" mat-flat-button [color]="'primary'"
+                            (click)="cancel()">
+                            بستن
+                        </button>
+                    </div>
+                    <div class="flex flex-col p-8">
+                        <section id=customer-info class="grid grid-cols-3  gap-2">
+                            <mat-form-field>
+                                <mat-label>َشماره تلفن</mat-label>
+                                <input matInput [(ngModel)]="customer?.personModel.phone1" readonly />
+                            </mat-form-field>
+
+                            <mat-form-field>
+                                <mat-label>نام</mat-label>
+                                <input matInput [(ngModel)]="customer?.personModel.firstName" readonly />
+                            </mat-form-field>
+
+                            <mat-form-field>
+                                <mat-label>نام خانوادگی</mat-label>
+                                <input matInput [(ngModel)]="customer?.personModel.lastName" readonly />
+                            </mat-form-field>
+
+                            <mat-form-field>
+                                <mat-label>نام پدر</mat-label>
+                                <input matInput [(ngModel)]="customer?.personModel.fatherName" readonly />
+                            </mat-form-field>
+
+
+                            <mat-form-field>
+                                <mat-label>کد ملی</mat-label>
+                                <input matInput [(ngModel)]="customer?.personModel.nationalCode" readonly />
+                            </mat-form-field>
+
+                            <mat-form-field>
+                                <mat-label>شماره شناسنامه</mat-label>
+                                <input matInput [(ngModel)]="customer?.personModel.identityCode" readonly />
+                            </mat-form-field>
+
+                            <mat-form-field>
+                                <mat-label>جنسیت </mat-label>
+                                <input matInput [(ngModel)]="customer?.personModel.genderBaseTitle" readonly />
+                            </mat-form-field>
+
+                            <mat-form-field>
+                                <mat-label>تاریخ تولد</mat-label>
+                                <input matInput [(ngModel)]="customer?.personModel.birthDate" readonly />
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>محل تولد</mat-label>
+                                <input matInput [(ngModel)]="customer?.personModel.birthPlaceTitle" readonly />
+                            </mat-form-field>
+                        </section>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700 p-8 border-t border-b">
+                        <p class="text-lg font-medium">اطلاعات پروژه و توضیحات</p>
+                    </div>
+                    <div class="flex flex-col p-8">
+                        <form [formGroup]="form" id="Projects" class="grid grid-cols-3 gap-2">
+                            <mat-form-field>
+                                <mat-label> پروژه ها </mat-label>
+                                <mat-select [placeholder]="'یک مورد را انتخاب کنید'" formControlName="projectId"
+                                    [disabled]="pageMode== PageMode.Update">
+                                    <mat-option *ngFor="let item of projects" [value]="item.id">{{ item.title }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <div>
+                                <mat-label> لیست آیتم های پروژه </mat-label>
+                                <mat-selection-list formControlName="projectSubItems"
+                                    [disabled]="pageMode== PageMode.Update">
+                                    <mat-list-option *ngFor="let item of selectedProject?.children" [value]="item.id">
+                                        {{ item.title }}
+                                        <mat-divider></mat-divider>
+                                    </mat-list-option>
+                                </mat-selection-list>
+                            </div>
+                            <mat-form-field>
+                                <mat-label>توضیحات </mat-label>
+                                <textarea matInput formControlName="descriptions"
+                                    [readonly]="pageMode== PageMode.Update"></textarea>
+                            </mat-form-field>
+                        </form>
+
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700 p-8 border-t border-b">
+                        <p class="text-lg font-medium">کارشناسان پروند</p>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex flex-col gt-xs:flex-row">
+                            <ng-container *ngFor="let emp of involvedEmployee; let i = index;">
+
+                                <!-- Contact -->
+                                <a class="z-20 flex items-center px-6 py-4 md:px-8 cursor-pointer border-b" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !emp.isDeleted,
+                                                'hover:bg-red-300 dark:hover:bg-hover': emp.isDeleted,
+                                                'bg-red-400 dark:bg-hover':  emp.isDeleted }">
+                                    <ng-container *ngIf="!emp.isNew &&  !emp.isDeleted">
+                                        <mat-icon class="icon-size-8 ml-4 " *ngIf="!emp.isPaid"
+                                            [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                                        <mat-icon class="icon-size-8 ml-4 text-green-600" *ngIf="emp.isPaid"
+                                            [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                                    </ng-container>
+
+
+                                    <mat-icon *ngIf="emp.isNew &&  !emp.isDeleted"
+                                        class="icon-size-8 ml-4 text-green-600"
+                                        [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                                    <mat-icon *ngIf=" emp.isDeleted" class="icon-size-8 ml-4 text-red-700"
+                                        [svgIcon]="'heroicons_solid:minus-circle'"></mat-icon>
+                                    <!-- Avatar -->
+                                    <div
+                                        class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden">
+
+
+                                        <img class="object-cover w-full h-full"
+                                            [src]="serverUrl+'/'+emp.profilePhotoUrl" alt="avatar" />
+
+                                    </div>
+                                    <!-- Titles -->
+                                    <div class="min-w-100 mr-4">
+                                        <div class="font-medium leading-5 truncate"
+                                            [ngClass]="{ 'line-through': emp.isDeleted}">
+                                            {{emp.employeeFullName}}
+                                        </div>
+                                        <div class="leading-5 truncate text-secondary"
+                                            [ngClass]="{ 'line-through': emp.isDeleted}">{{emp.unitPositionTitle}}</div>
+                                    </div>
+                                    <!-- Comisions -->
+                                    <div class="flex flex-auto mr-8 items-center">
+
+                                        <span class=" flex-shrink-0 ml-4"> مبلغ کمیسیون:</span>
+                                        <mat-form-field class=" w-60" *ngIf="emp.isDeleted">
+                                            <input matInput value="حذف شده" disabled />
+                                        </mat-form-field>
+                                        <mat-form-field class=" w-60" *ngIf="!emp.isDeleted">
+                                            <input matInput type="number" [(ngModel)]="emp.amount" />
+                                        </mat-form-field>
+
+                                        <button class="px-3 text-green-500 mr-2" *ngIf="emp.isPaid" mat-flat-button>
+                                            <mat-icon class="text-green-600 ml-2"
+                                                svgIcon="heroicons_outline:check-circle">
+                                            </mat-icon>
+                                            پرداخت شده
+                                        </button>
+
+
+                                    </div>
+                                    <!-- Delete/restore -->
+                                    <button *ngIf="pageMode== PageMode.Add" class="w-8 h-8 min-h-8" mat-icon-button
+                                        (click)="removeInvolved(i)" matTooltip="حذف">
+                                        <mat-icon *ngIf="!emp.isDeleted" class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                        <mat-icon *ngIf="emp.isDeleted" class="icon-size-5"
+                                            [svgIcon]="'material_solid:undo'"></mat-icon>
+                                    </button>
+                                </a>
+
+                            </ng-container>
+                            <!-- --- Add New Employee --- -->
+                            <a *ngIf="pageMode== PageMode.Add"
+                                class="z-20 flex items-center px-6 py-4 md:px-8 cursor-pointer border-b hover:bg-gray-100 dark:hover:bg-hover">
+                                <mat-icon class="icon-size-8 ml-4 text-green-600"
+                                    [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+
+                                <!-- Avatar -->
+                                <div
+                                    class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden">
+
+                                    <img class="object-cover w-full h-full" src="assets/images/avatars/no-avatar.jpg"
+                                        alt="avatar" />
+                                </div>
+                                <!-- Search Employee -->
+                                <div class="min-w-100 mr-4">
+                                    <form [formGroup]="empForm">
+                                        <mat-form-field>
+                                            <mat-label>
+                                                نام شخص را برای افزودن به لیست وارد کنید
+                                            </mat-label>
+                                            <input type="text" matInput [placeholder]="'نام شخص را وارد کنید'"
+                                                formControlName="employeeFullName" [matAutocomplete]="auto" />
+
+                                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                                <mat-option *ngFor="let option of filteredOptions | async"
+                                                    [value]="option ">
+                                                    <span mat-line> {{ option.personModel.fullName }}</span>
+                                                    (<span mat-line class="text-secondary"> {{
+                                                        option.unitPositionTitle }}</span>)
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </form>
+                                </div>
+
+                            </a>
+
+                        </div>
+                    </div>
+
+                    <div *ngIf="pageMode== PageMode.Add"
+                        class="flex items-center justify-end border-t px-8 py-5 bg-gray-50 dark:bg-gray-700">
+                        <button mat-button (click)="cancel()">
+                            انصراف
+                        </button>
+
+                        <button class="px-6 ml-3" mat-flat-button [color]="'primary'" (click)="save()"
+                            [disabled]="saving">
+                            <span *ngIf="!saving">
+                                ثبت قرارداد
+                            </span>
+                            <mat-progress-spinner *ngIf="saving" [diameter]="24" [mode]="'indeterminate'">
+                            </mat-progress-spinner>
+
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>

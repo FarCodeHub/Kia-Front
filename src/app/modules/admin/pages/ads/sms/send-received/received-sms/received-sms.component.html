@@ -1,0 +1,91 @@
+
+                <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden  sm:overflow-y-auto">
+                    <c-data-table-filters-header [filters]="filters" (filtersChanged)="applyFilter($event)">
+                    </c-data-table-filters-header>
+                    <ng-container>
+                        <div class="data-grid overflow-x-auto">
+
+                            <div class="data-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                matSort matSortDisableClear>
+
+
+                                <c-data-table-column title="شماره" field="lineNumber" [(filters)]="filters"
+                                (filtersChanged)="applyFilter($event)">
+                            </c-data-table-column>
+
+                            <c-data-table-column title="شماره گیرنده" field="mobileNo" [(filters)]="filters"
+                            (filtersChanged)="applyFilter($event)">
+                        </c-data-table-column>
+
+
+                        <c-data-table-column title="تاریخ دریافت" field="latinReceiveDateTime" [(filters)]="filters"
+                        (filtersChanged)="applyFilter($event)">
+                    </c-data-table-column>
+
+                    <c-data-table-column title="متن پیامک" field="smsMessageBody" [(filters)]="filters"
+                    (filtersChanged)="applyFilter($event)">
+                </c-data-table-column>
+
+
+
+                                <div class="hidden md:block">
+
+                                </div>
+                                <div class="hidden md:block">
+
+                                </div>
+
+                            </div>
+
+                            <ng-container *ngFor="let item of items">
+                                <div class="data-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b bg-white">
+
+
+
+                                    <div class="hidden md:block">
+                                        {{item.lineNumber}}
+                                    </div>
+
+
+
+                                    <div class="hidden sm:block">
+                                        {{item.mobileNo}}
+                                    </div>
+
+                                    <div class="hidden sm:block">
+                                        {{item.latinReceiveDateTime | jalali}}
+                                    </div>
+
+
+                                    <div class="hidden md:block">
+                                        {{item.smsMessageBody}}
+                                    </div>
+
+
+
+
+                                    <div class="grid-title">
+
+                                    </div>
+                                </div>
+
+                            </ng-container>
+
+                        </div>
+
+                        <mat-paginator
+                            class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+                            [length]="pagination.length" [(pageIndex)]="pagination.pageIndex"
+                            [pageSize]="pagination.size" [pageSizeOptions]="[5, 10, 25, 100]"
+                            [showFirstLastButtons]="true"></mat-paginator>
+
+                    </ng-container>
+
+                    <ng-container *ngIf="pagination.length==0;">
+                        <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
+                            هیچ پیامی ارسال نشده است
+                        </div>
+                    </ng-container>
+
+
+                </div>

@@ -1,0 +1,228 @@
+<div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+
+    <mat-drawer-container class="flex-auto h-full" [hasBackdrop]="false">
+
+        <!-- Drawer content -->
+        <mat-drawer-content class="flex overflow-hidden">
+
+            <!-- Chats list -->
+            <ng-container>
+                <div
+                    class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-100 lg:max-w-100 bg-card dark:bg-transparent">
+
+                    <!-- Header -->
+                    <div class="flex flex-col flex-0 py-4 px-8 border-b bg-gray-50 dark:bg-transparent">
+                        <h1>اطلاعات مشتری</h1>
+                    </div>
+
+                    <!-- Customer Detail -->
+                    <div class="flex-auto overflow-y-auto p-4">
+                        <!-- Call Status -->
+                        <div class="flex flex-col items-center px-6 pb-2">
+                            <div
+                                class="flex flex-shrink-0 items-center justify-center w-20 h-20 ml-4 rounded-full pulse">
+                                <mat-icon class="icon-size-8 text-green-500"
+                                    *ngIf="call.typeBaseUniqueName=='incomingCall'"
+                                    [svgIcon]="'heroicons_outline:phone-incoming'">
+                                </mat-icon>
+                                <mat-icon class="icon-size-8 text-blue-500"
+                                    *ngIf="call.typeBaseUniqueName=='outgoingCall'"
+                                    [svgIcon]="'heroicons_outline:phone-outgoing'">
+                                </mat-icon>
+                            </div>
+                        </div>
+                        <!-- Customer Phone Number -->
+                        <div class="flex flex-col px-6 pb-2">
+                            <mat-form-field class="w-full">
+                                <mat-label>شماره تماس:</mat-label>
+                                <mat-icon class="icon-size-5 ml-2" matPrefix
+                                    [svgIcon]="'heroicons_outline:phone-incoming'">
+                                </mat-icon>
+                                <input matInput placeholder="شماره تماس" [(ngModel)]="task.customerPhoneNumber1"
+                                    readonly>
+                            </mat-form-field>
+                        </div>
+                        <form [formGroup]="form">
+                            <!-- Customer Name -->
+                            <div class="flex flex-col px-6 pb-2">
+                                <mat-form-field class="w-full">
+                                    <mat-icon class="icon-size-5 ml-2" matPrefix [svgIcon]="'heroicons_outline:user'">
+                                    </mat-icon>
+                                    <input matInput [placeholder]="' نام را وارد کنید'" formControlName="firstName"
+                                        required />
+                                </mat-form-field>
+
+
+
+                            </div>
+                            <!-- Customer LastName -->
+                            <div class="flex flex-col px-6 pb-2">
+                                <mat-form-field class="w-full">
+                                    <mat-icon class="icon-size-5 ml-2" matPrefix [svgIcon]="'heroicons_outline:users'">
+                                    </mat-icon>
+                                    <input matInput [placeholder]="' نام خانوادگی را وارد کنید'"
+                                        formControlName="lastName" required />
+                                </mat-form-field>
+                            </div>
+                            <!-- Customer Gender -->
+                            <div class="flex flex-col px-6 pb-2">
+                                <mat-form-field class="w-full">
+                                    <mat-select [placeholder]="'جنسیت را انتخاب کنید'" formControlName="genderBaseId">
+                                        <mat-option *ngFor="let item of genders" [value]="item.id">{{ item.title }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <!-- Customer City -->
+                            <div class="flex flex-col px-6 pb-2">
+                                <mat-form-field class="w-full">
+                                    <mat-select formControlName="zipCodeId" placeholder="یک شهر را انتخاب کنید">
+                                        <div class="p-2">
+                                            <input (keyup)="searchCountryDivision($event.target.value)"
+                                                class="border rounded w-full p-2" placeholder="جستجو شهر و استان" />
+                                        </div>
+
+                                        <mat-optgroup *ngFor="let p of provinces" [label]="p.title">
+                                            <mat-option *ngFor="let c of p.cities" [value]="c.id">
+                                                &nbsp;&nbsp; {{ c.title }}
+                                            </mat-option>
+                                        </mat-optgroup>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </form>
+                        <mat-divider></mat-divider>
+                        <!-- Result -->
+                        <div class="flex flex-col px-6 pb-2">
+                            <mat-form-field class="w-full">
+                                <mat-label>نتیجه تماس</mat-label>
+                                <mat-icon class="icon-size-5 ml-2" matPrefix [svgIcon]="'heroicons_outline:clipboard'">
+                                </mat-icon>
+                                <mat-select [(ngModel)]="resultId" (selectionChange)="setDetail($event)">
+                                    <mat-option *ngFor="let r of resultTypes" [value]="r.id">
+                                        {{r.title}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <form [formGroup]="selectTaskForm">
+
+
+                                <mat-form-field class="w-full" *ngIf="isDescriptions">
+                                    <mat-label>
+                                        توضیحات
+                                    </mat-label>
+                                    <input matInput [placeholder]="'توضیحات را وارد کنید'"
+                                        formControlName="descriptions" />
+                                </mat-form-field>
+
+                                <mat-form-field class="w-full" *ngIf="isDateTime">
+
+                                    <mat-label> تاریخ انجام را وارد کنید</mat-label>
+                                    <input matInput formControlName="duaAt" [matDatepicker]="picker">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+
+                                </mat-form-field>
+                                <div class="flex flex-row p-2" *ngIf="isDateTime">
+                                    <mat-form-field class="w-full">
+                                        <mat-label> دقیقه</mat-label>
+
+                                        <mat-select [placeholder]="'دقیقه را انتخاب کنید'" formControlName="minutes">
+                                            <mat-option *ngFor="let item of minutesTime" [value]="item">
+                                                {{item}}
+                                            </mat-option>
+                                        </mat-select>
+
+                                    </mat-form-field>
+
+                                    <mat-form-field class="w-full">
+
+                                        <mat-label>ساعت</mat-label>
+                                        <mat-select [placeholder]="'ساعت را انتخاب کنید'" formControlName="hours">
+                                            <mat-option *ngFor="let item of hoursTime" [value]="item">
+                                                {{item}}
+                                            </mat-option>
+                                        </mat-select>
+
+                                    </mat-form-field>
+
+                                </div>
+                                <!-- <mat-form-field class="w-full" *ngIf="isEmployee">
+                                    <mat-label>
+                                       انتخاب کارمندان
+                                    </mat-label>
+                                    <mat-select [placeholder]="'کارمند را انتخاب کنید'" formControlName="assignToEmployeeId">
+                                        <mat-option *ngFor="let item of employees" [value]="item.id">
+                                            {{ item.personModel.fullName}} {{ item.unitPositionTitle}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field> -->
+                            </form>
+
+                            <button class="mt-4" mat-flat-button [color]="'primary'" (click)="save()"
+                                [disabled]="saving">
+                                <span *ngIf="!saving">
+                                    ثبت نتیجه تماس
+                                </span>
+                                <mat-progress-spinner *ngIf="saving" [diameter]="24" [mode]="'indeterminate'">
+                                </mat-progress-spinner>
+
+                            </button>
+
+                            <!-- Alert -->
+                            <fuse-alert class="mt-8 -mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
+                                [type]="alert.type" [@shake]="alert.type === 'error'">
+                                {{alert.message}}
+                            </fuse-alert>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </ng-container>
+
+
+            <!-- Conversation -->
+            <ng-container>
+                <div class="flex-auto border-l">
+                    <!-- Main -->
+                    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+                        <div class="w-full max-w-screen-xl mx-auto">
+                            <!-- Tabs -->
+                            <mat-tab-group class="sm:px-2" [animationDuration]="'0'">
+
+                                <!-- questions -->
+                                <mat-tab label="تماس جاری">
+                                    <ng-template matTabContent>
+                                        <app-questions [taskId]="task.id" [(questions)]="questions">
+                                        </app-questions>
+                                    </ng-template>
+                                </mat-tab>
+
+                                <!-- Call History -->
+                                <mat-tab label="تاریخچه">
+                                    <ng-template matTabContent>
+                                        <app-call-history [customerId]="task.customerId"></app-call-history>
+                                    </ng-template>
+                                </mat-tab>
+
+                                <!-- Projects -->
+                                <mat-tab label="پروژها">
+                                    <ng-template matTabContent>
+                                        <app-projects></app-projects>
+                                    </ng-template>
+                                </mat-tab>
+
+                            </mat-tab-group>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>

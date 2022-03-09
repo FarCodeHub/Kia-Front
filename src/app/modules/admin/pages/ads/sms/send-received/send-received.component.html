@@ -1,0 +1,36 @@
+<div class="flex flex-col flex-auto">
+
+    <cmpt-page-add-header [showAction]="false" [title]="smsMode ?'پیامک های دریافتی':'پیامک های ارسالی'">
+    </cmpt-page-add-header>
+
+    <div class="p-6 sm:p-10 ">
+        <div class="flex flex-col items-center">
+
+            <!-- Recurring selector -->
+            <div class="flex items-center mb-4 sm:mb-8 p-0.5 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+                <button class="px-6"
+                    [ngClass]="{'bg-card pointer-events-none shadow': smsMode,'bg-transparent': !smsMode}"
+                    mat-flat-button (click)="smsMode = true" disableRipple>
+                    پیام های دریافتی
+                </button>
+                <button class="px-6"
+                    [ngClass]="{'bg-card pointer-events-none shadow': !smsMode, 'bg-transparent': smsMode}"
+                    mat-flat-button (click)="smsMode = false" disableRipple>
+                    پیام های ارسالی
+                </button>
+            </div>
+        </div>
+        <div class="flex flex-col sm:mb-18 overflow-hidden  sm:overflow-y-auto">
+
+
+            <ng-container *ngIf="smsMode">
+                <app-received-sms></app-received-sms>
+            </ng-container>
+
+            <ng-container *ngIf="smsMode == false">
+                <app-sent-sms></app-sent-sms>
+            </ng-container>
+        </div>
+    </div>
+
+</div>

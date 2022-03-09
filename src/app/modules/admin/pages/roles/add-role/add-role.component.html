@@ -1,0 +1,48 @@
+<cmpt-add-edit-side-bar [pageMode]="pageMode" [form]="form" pageName="نقش" (onClose)="cancel()" (onSave)="save()">
+    <form [formGroup]="form" class="grid grid-cols-1 gap-2">
+
+        <mat-form-field>
+            <mat-label>
+                عنوان
+            </mat-label>
+            <input matInput [placeholder]="'عنوان را وارد کنید'" formControlName="title" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>
+                نام یکتا انگلیسی
+            </mat-label>
+            <input matInput [placeholder]="'نام یکتا انگلیسی را وارد کنید'" formControlName="uniqueName" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>
+                زیر مجموعه
+            </mat-label>
+            <mat-select [placeholder]="'نقش والد انتخاب کنید'" formControlName="parentId">
+                <mat-option *ngFor="let item of (parentRoles$ | async)" [value]="item.id">{{ item.title }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div>
+
+            <mat-label class="font-bold">انتخاب دسترسی</mat-label>
+            <c-treeview class=" max-h-60" [datasource]="(permissions$ | async)" formControlName="permissionsIdList"
+                IdFieldName="id" titleFieldName="title"></c-treeview>
+
+            <!-- <mat-selection-list formControlName="permissionsIdList">
+                <mat-list-option *ngFor="let item of (permissions$ | async)" [value]="item.id">
+                    {{ item.title }}
+                    <mat-divider></mat-divider>
+                </mat-list-option>
+            </mat-selection-list> -->
+            <mat-error *ngIf="form.get('permissionsIdList')?.errors?.required">
+                یک دسترسی را نتخاب نمایید
+            </mat-error>
+
+
+            <mat-spinner diameter="40" *ngIf="loaderService.isLoading | async"></mat-spinner>
+        </div>
+    </form>
+</cmpt-add-edit-side-bar>
