@@ -6,12 +6,11 @@
 
 export const environment = {
     production: false,
-    apiUrl: "http://185.67.103.69:280/api",
-    singalUrl: "http://185.67.103.69:281",
-    imageUrl: "http://185.67.103.69:280",
+    apiUrl: "###",
+    singalUrl: "###",
+    imageUrl: "###",
 
-    // apiUrl: "http://192.168.101.20:81/api",
-    // singalUrl: "http://192.168.101.20:81",
+ 
 };
 
 /*
