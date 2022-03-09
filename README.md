@@ -1,27 +1,51 @@
-# Fuse - Admin template and Starter project for Angular
+# Angular Project [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=FarCodeHub_Kia-Front&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=FarCodeHub_Kia-Front) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=FarCodeHub_Kia-Front&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=FarCodeHub_Kia-Front) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=FarCodeHub_Kia-Front&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=FarCodeHub_Kia-Front)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli)
 
-## Development server
+# What is this project about?
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+`Kia` is a real state agancy software for covering all activites of an agency include :
 
-## Code scaffolding
+    * Admin Panel 
+        - User Managment 
+        - Role Managment
+        - Permission Managment
+        - Employee Managment
+        - Team Managment
+        - Person Managment
+        - Customer Managment
+        - Unit Managment
+        
+    * Operator Panel
+        - Project Managment
+        - Ads Managment
+        - Comission Managment
+        - Supervisor Managment
+        - Contract Managment
+        - Inbox
+        - Voip System
+        
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+# Scenario
+
+everythings start with ads , we have developed a system for managing the costs and effectiveness of advertising on instagram , telegram , phone , sms and some of local apps platforms.
+when someone see this ads and call with the company , voip system automaticaly make a work file for it and assign this file to a agent.
+all histories of activities of customer saved and managed until becoming this to a contract . after contract system distributed comissions according to his agenda.
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Run `npm install` to build the project.
 
-## Running unit tests
+# Screenshots
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+![photo_2022-03-09_16-36-32](https://user-images.githubusercontent.com/29880255/157447861-22f83878-61d1-49fe-a0ff-226916c79e5d.jpg)
 
-## Running end-to-end tests
+![photo_2022-03-09_16-37-09](https://user-images.githubusercontent.com/29880255/157447886-08b60710-38c9-481e-9a28-be9b6629fd6b.jpg)
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice.  To use this command, you need to first add a package that implements end-to-end testing capabilities.
+![photo_2022-03-09_16-37-23](https://user-images.githubusercontent.com/29880255/157447901-70d0c4fa-e090-49cc-b20b-2ca71438bb88.jpg)
 
-## Further help
+![photo_2022-03-09_16-37-49](https://user-images.githubusercontent.com/29880255/157447947-d714aa31-33e7-4d04-82ac-39f1376faae4.jpg)
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+# More Info
+for more information call me 09137495245
+ 
